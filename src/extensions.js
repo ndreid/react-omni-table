@@ -20,3 +20,9 @@ export const numFunc = {
     return number.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,')
   }
 }
+
+export const momentExt = {
+  isSame: (d1, d2) => (!d1 && !d2) || (d1 && d2 && d1.isSame(d2, 'day')),
+  isBefore: (d1, d2) => (!d1 || !d2) ? undefined : d1.isBefore(d2),
+  isAfter: (d1, d2) => (!d1 || !d2) ? undefined : d1.isAfter(d2),
+}

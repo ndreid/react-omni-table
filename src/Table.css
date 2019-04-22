@@ -27,9 +27,11 @@
 }
 
 .t-head {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   padding-right: 8px;
+  cursor: pointer;
 }
 
 .t-body {
@@ -53,9 +55,9 @@
   min-width: min-content;
 }
 
-.t-row:hover {
+/* .t-row:hover {
   background-color: #efefef;
-}
+} */
 
 .t-row.t-dragging {
   box-shadow: 0px 0px 10px 1px grey;
@@ -78,6 +80,7 @@
 
 
 .t-cell {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   min-height: 25px;

@@ -6,6 +6,7 @@ import Head from './Head'
 import { connect } from 'react-redux'
 
 class Header extends Component {
+
   shouldComponentUpdate(nextProps) {
     if (this.props.scrollLeft !== nextProps.scrollLeft) {
       ReactDOM.findDOMNode(this.refs.header).scrollLeft = nextProps.scrollLeft
@@ -22,7 +23,9 @@ class Header extends Component {
       <div ref='header' className='t-header'>
         <div className='t-expand-button t-cell'></div>
         {this.props.columns.map((col, idx) =>
-            <Head key={idx} colNum={idx} column={col}/>
+            <Head key={idx} colNum={idx} column={col} onClick={this.props.onHeadClick}
+              columnSort={this.props.sortedColumns.find(sc => sc.name === col.dataIndex)}
+            />
         )}
         {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
       </div>
@@ -33,6 +36,8 @@ class Header extends Component {
 Header.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   scrollLeft: PropTypes.number,
+  sortedColumns: PropTypes.array.isRequired,
+  onHeadClick: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({

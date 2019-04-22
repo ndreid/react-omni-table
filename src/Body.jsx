@@ -1,6 +1,10 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import moment from 'moment'
+import DataTypes from './DataTypes'
 import { Row } from './'
+
+import { momentExt } from './extensions'
 
 import { connect } from 'react-redux'
 import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection } from './redux/actions'
@@ -79,13 +83,13 @@ class Body extends PureComponent {
     }
   }
 
-  flattenData(data, flatData = [], idMapPrefix = '', lvl = 0) {
+  flattenData(data, flatData = [], idMapPrefix = '', tier = 0) {
     for (let row of data) {
       let idMap = idMapPrefix + (idMapPrefix === '' ? '' : '-') + row.id
-      flatData.push({ data: row, info: { idMap, lvl } })
+      flatData.push({ data: row, info: { idMap, tier } })
 
       if (Array.isArray(row.children)) {
-        this.flattenData(row.children, flatData, idMap, lvl + 1)
+        this.flattenData(row.children, flatData, idMap, tier + 1)
       }
     }
     return flatData
@@ -147,6 +151,33 @@ class Body extends PureComponent {
     if (prevProps.data !== this.props.data) {
       let flatData = this.flattenData(this.props.data)
       this.setState({ flatData, orderedData: [...flatData] })
+    } else if (prevProps.sortedColumns !== this.props.sortedColumns) {
+      console.log('sorting', this.props.sortedColumns)
+      let data = [...this.props.data]
+      for (let sortedColumn of this.props.sortedColumns) {
+        let dataType = this.props.columns.find(c => c.dataIndex === sortedColumn.name).dataType
+        console.log(dataType)
+        data.sort((dataA, dataB) => {
+          let a = dataA[sortedColumn.name], b = dataB[sortedColumn.name]
+          switch (dataType) {
+            case DataTypes.Date:
+              let momentA = moment(), momentB = moment(b)
+              return momentExt.isBefore(momentA, momentB) ? -1 : momentExt.isAfter(momentA, momentB) ? 1 : 0
+            case DataTypes.String:
+              let strA = typeof a === 'string' ? a.toUpperCase() : '',
+                  strB = typeof b === 'string' ? b.toUpperCase() : ''
+              return strA < strB ? -1 : strA > strB ? 1 : 0
+            case DataTypes.Number:
+            case DataTypes.Int:
+              return a - b
+            case DataTypes.Bool:
+              return !a && b ? -1 : a && !b ? 1 : 0
+          }
+        })
+      }
+      console.log(data)
+      let flatData = this.flattenData(data)
+      this.setState({ flatData, orderedData: [...flatData] })
     }
   }
 
@@ -155,19 +186,22 @@ class Body extends PureComponent {
     return (             
       <div ref='body' className={classes} onScroll={this.handleScroll}>
         <div key={-1} id='start' style={{minHeight: this.state.scrollBuffer.top}}/>
-        {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }) =>
-          <Row key={info.idMap}
+        {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }) => {
+          let colorStyle = this.props.settings.tierColors[info.tier % this.props.settings.tierColors.length]
+          return <Row key={info.idMap}
             id={data.id}
             idMap={info.idMap}
             data={data}
             columns={this.props.columns}
-            lvl={info.lvl}
+            tier={info.tier}
+            settings={this.props.settings}
+            colorStyle={colorStyle}
             onCellInput={this.props.onCellInput}
             handleShowHideToggle={this.handleShowHideToggle}
             onDragStart={this.handleDragStart}
             onMouseEnter={this.handleMouseEnter}
           />
-        )}
+        })}
         <div key={Infinity} id='end' style={{minHeight: this.state.scrollBuffer.bottom}}/>
       </div>
     )
@@ -179,6 +213,8 @@ Body.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   onCellInput: PropTypes.func,
   rowHeight: PropTypes.number.isRequired,
+  settings: PropTypes.object.isRequired,
+  sortedColumns: PropTypes.array.isRequired,
 }
 
 const mapStateToProps = state => ({

@@ -7,15 +7,44 @@ import Body from './Body'
 
 import { addTable, delTable } from './redux/actions'
 
+const defaultSettings = {
+  tierColors: [
+    { color: 'black', backgroundColor: 'gray' },
+    { color: 'black', backgroundColor: 'white' },
+  ],
+  hoverColors: { color: 'black', backgroundColor: '#efefef' },
+}
+
 class Table extends Component {
-  getRowCount_R(rows, countObj) {
-    countObj.value+= rows.length
-    for (let child in rows) {
-      if (child.children) {
-        this.getRowCount_R(child.children, countObj)
-      }
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      settings: {
+        ...defaultSettings,
+        ...props.settings,
+      },
+      sortedColumns: []
     }
-    return countObj.value
+
+    this.handleHeadClick = this.handleHeadClick.bind(this)
+  }
+
+  handleHeadClick(columnName) {
+    let sortedColumns = [...this.state.sortedColumns],
+        index = sortedColumns.findIndex(cs => cs.name === columnName),
+        columnSort = sortedColumns[index]
+
+    if (!columnSort) {
+      sortedColumns.push({ name: columnName, sortOrder: 'asc' })
+    } else if (columnSort.sortOrder === 'asc') {
+      sortedColumns[index] = { name:sc.name, sortOrder: 'desc' }
+      sortedColumns.splice(0, 0, sortedColumns.splice(index, 1)[0])
+    } else {
+      sortedColumns.splice(index, 1)
+    }
+
+    this.setState({ sortedColumns })
   }
 
   componentDidMount() {
@@ -26,16 +55,24 @@ class Table extends Component {
     this.props.delTable(this.props.tableId)
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.settings != this.props.settings) {
+      this.setState({ settings: { ...defaultSettings, ...this.props.settings } })
+    }
+  }
+
   render() {
+
     return (
-        <div ref='table' className='t-table' >
-          <Header columns={this.props.columns}/>
+        <div ref='table' className='t-table'>
+          <Header columns={this.props.columns} sortedColumns={this.state.sortedColumns} settings={this.state.settings} onHeadClick={this.handleHeadClick}/>
           <Body columns={this.props.columns}
                 data={this.props.data}
-                dragAndDropDisabled={this.props.settings.dragAndDropDisabled}
                 onCellInput={this.props.onCellInput}
                 rowHeight={this.props.rowHeight}
                 tableId={this.props.tableId}
+                settings={this.state.settings}
+                sortedColumns={this.state.sortedColumns}
           />
         </div>
     )

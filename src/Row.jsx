@@ -11,19 +11,15 @@ class Row extends Component {
   constructor(props) {
     super(props)
 
-    const defaultSettings = {
-      draggable: true,
-    }
-
     this.state = {
       hideChildren: false,
-      settings: { ...defaultSettings, ...props.data.settings }
     }
 
     this.showHideToggle = this.showHideToggle.bind(this)
     this.onCellInput = this.onCellInput.bind(this)
     this.onDragStart = this.onDragStart.bind(this)
     this.onMouseEnter = this.onMouseEnter.bind(this)
+    this.onMouseLeave = this.onMouseLeave.bind(this)
   }
   
   showHideToggle() {
@@ -36,7 +32,7 @@ class Row extends Component {
       this.props.onCellInput({
         id: this.props.id,
         idMap: this.props.idMap,
-        lvl: this.props.lvl,
+        tier: this.props.tier,
         ...inputObj
       })
     }
@@ -50,20 +46,27 @@ class Row extends Component {
 
   onMouseEnter(e) {
     this.props.onMouseEnter(e, this.props.idMap)
+    this.setState({ hovering: true })
+  }
+
+  onMouseLeave(e) {
+    this.setState({ hovering: false })
   }
 
   render() {
     let classes = `t-row${this.props.dragSource ? this.props.dragSource.idMap === this.props.idMap ? ' t-dragging' : '' : ' t-draggable'}`
-    
+    let style = this.state.hovering ? this.props.settings.hoverColors : this.props.colorStyle
+
     return (
-      <div id={this.props.idMap} className={classes} style={this.props.style} draggable='true'
+      <div ref='self' id={this.props.idMap} className={classes} draggable='true' style={style}
         onDragStart={this.onDragStart}
         onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
       >
         {this.props.data.children
           ? this.state.hideChildren
-            ? <div className='t-cell t-expand-button' onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={'black'}/></div>
-            : <div className='t-cell t-expand-button' onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={'black'}/></div>
+            ? <div className='t-cell t-expand-button' onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
+            : <div className='t-cell t-expand-button' onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
           : <div className='t-cell t-expand-space'/>
         }
         {this.props.columns.map((col, idx) => {
@@ -71,7 +74,7 @@ class Row extends Component {
           return <Cell key={idx}
                       primary={idx === 0}
                       column={col}
-                      lvl={this.props.lvl}
+                      tier={this.props.tier}
                       data={this.props.data[col.dataIndex]}
                       setIsEditingCell={this.props.setIsEditingCell}
                       overrideProps={cellOverrideProps}
@@ -88,15 +91,20 @@ Row.propTypes = {
   data: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   id: PropTypes.any.isRequired,
-  lvl: PropTypes.number.isRequired,
+  tier: PropTypes.number.isRequired,
   idMap: PropTypes.string.isRequired,
   setIsEditingCell: PropTypes.func.isRequired,
   isEditingCell: PropTypes.bool.isRequired,
   onCellInput: PropTypes.func,
-  settings: PropTypes.object,
+  settings: PropTypes.object.isRequired,
+  colorStyle: PropTypes.object.isRequired,
   handleHideChildren: PropTypes.func,
   onDragStart: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
+}
+
+Row.defaultProps = {
+  colorStyle: {}
 }
 
 const mapStateToProps = state => ({
