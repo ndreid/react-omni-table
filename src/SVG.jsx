@@ -32,3 +32,13 @@ MinusSVG.propTypes = {
   height: PropTypes.number.isRequired,
   stroke: PropTypes.string.isRequired
 }
+
+export const UpSVG = props =>
+  <svg width={props.width} height={props.height} viewBox="0 0 200 141">
+    <path d="M100 0 L0 141 L200 141" fill={props.color || 'black'}/>
+  </svg>
+
+export const DownSVG = props =>
+  <svg width={props.width} height={props.height} viewBox="0 0 200 141">
+    <path d="M0 0 L200 0 L 100 141" fill={props.color || 'black'}/>
+  </svg>

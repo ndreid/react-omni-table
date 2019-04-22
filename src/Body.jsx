@@ -1,10 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import DataTypes from './DataTypes'
 import { Row } from './'
-
-import { momentExt } from './extensions'
 
 import { connect } from 'react-redux'
 import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection } from './redux/actions'
@@ -152,30 +149,32 @@ class Body extends PureComponent {
       let flatData = this.flattenData(this.props.data)
       this.setState({ flatData, orderedData: [...flatData] })
     } else if (prevProps.sortedColumns !== this.props.sortedColumns) {
-      console.log('sorting', this.props.sortedColumns)
       let data = [...this.props.data]
       for (let sortedColumn of this.props.sortedColumns) {
         let dataType = this.props.columns.find(c => c.dataIndex === sortedColumn.name).dataType
-        console.log(dataType)
         data.sort((dataA, dataB) => {
           let a = dataA[sortedColumn.name], b = dataB[sortedColumn.name]
+          let r = 0
           switch (dataType) {
             case DataTypes.Date:
-              let momentA = moment(), momentB = moment(b)
-              return momentExt.isBefore(momentA, momentB) ? -1 : momentExt.isAfter(momentA, momentB) ? 1 : 0
+              let dateA = new Date(a), dateB = new Date(b)
+              r = dateA - dateB
+              break
             case DataTypes.String:
-              let strA = typeof a === 'string' ? a.toUpperCase() : '',
-                  strB = typeof b === 'string' ? b.toUpperCase() : ''
-              return strA < strB ? -1 : strA > strB ? 1 : 0
+              let strA = typeof a === 'string' ? a.toUpperCase() : '', strB = typeof b === 'string' ? b.toUpperCase() : ''
+              r = strA < strB ? -1 : strA > strB ? 1 : 0
+              break
             case DataTypes.Number:
             case DataTypes.Int:
-              return a - b
+              r = a - b
+              break
             case DataTypes.Bool:
-              return !a && b ? -1 : a && !b ? 1 : 0
+              r = !a && b ? -1 : a && !b ? 1 : 0
+              break
           }
+          return r * (sortedColumn.sortOrder === 'asc' ? 1 : -1)
         })
       }
-      console.log(data)
       let flatData = this.flattenData(data)
       this.setState({ flatData, orderedData: [...flatData] })
     }

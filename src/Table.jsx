@@ -9,7 +9,7 @@ import { addTable, delTable } from './redux/actions'
 
 const defaultSettings = {
   tierColors: [
-    { color: 'black', backgroundColor: 'gray' },
+    { color: 'black', backgroundColor: 'darkgray' },
     { color: 'black', backgroundColor: 'white' },
   ],
   hoverColors: { color: 'black', backgroundColor: '#efefef' },
@@ -38,8 +38,8 @@ class Table extends Component {
     if (!columnSort) {
       sortedColumns.push({ name: columnName, sortOrder: 'asc' })
     } else if (columnSort.sortOrder === 'asc') {
-      sortedColumns[index] = { name:sc.name, sortOrder: 'desc' }
-      sortedColumns.splice(0, 0, sortedColumns.splice(index, 1)[0])
+      sortedColumns[index] = { name: columnSort.name, sortOrder: 'desc' }
+      sortedColumns.splice(sortedColumns.length, 0, sortedColumns.splice(index, 1)[0])
     } else {
       sortedColumns.splice(index, 1)
     }
@@ -62,7 +62,6 @@ class Table extends Component {
   }
 
   render() {
-
     return (
         <div ref='table' className='t-table'>
           <Header columns={this.props.columns} sortedColumns={this.state.sortedColumns} settings={this.state.settings} onHeadClick={this.handleHeadClick}/>

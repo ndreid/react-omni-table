@@ -19,7 +19,7 @@ const columns = [
   },
   {
     name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
-    style: { width: '60px', align: 'center' },
+    style: { width: '120px', align: 'center' },
   },
 ]
 

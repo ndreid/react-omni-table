@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { UpSVG, DownSVG } from './SVG'
 
 class Head extends Component {
   constructor() {
@@ -21,16 +22,21 @@ class Head extends Component {
     }
 
     return (
+      <React.Fragment>
       <div className='t-head' style={style} onClick={this.onClick}>
         <b>{this.props.column.name}</b>
         { this.props.columnSort
-          ? <div style={{ position: 'absolute', bottom: '0', left: '0'}}>
-              {this.props.columnSort.sortOrder}
-            </div>
+          ? this.props.columnSort.sortOrder === 'asc'
+            ? <UpSVG width={7} height={5} color='green'/>
+            : <DownSVG width={7} height={5} color='red'/>
+            // <div style={{ position: 'relative', display: 'inline', bottom: '0', left: '0' }}>
+            //   {this.props.columnSort.sortOrder}
+            // </div>
           : undefined
         }
         
       </div>
+      </React.Fragment>
     )
   }
 }

@@ -14,6 +14,7 @@ class Header extends Component {
 
     return (
       this.props.columns !== nextProps.columns
+      || this.props.sortedColumns !== nextProps.sortedColumns
       || this.props.scrollbarYIsVisible !== nextProps.scrollbarYIsVisible
     )
   }
