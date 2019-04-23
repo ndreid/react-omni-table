@@ -54,11 +54,19 @@ class Row extends Component {
   }
 
   render() {
-    let classes = `t-row${this.props.dragSource ? this.props.dragSource.idMap === this.props.idMap ? ' t-dragging' : '' : ' t-draggable'}`
+    let classes = `t-row${
+      this.props.dragSource
+      ? this.props.dragSource.idMap === this.props.idMap 
+        ? ' t-dragging'
+        : ''
+      : this.props.settings.dragEnabled
+        ? ' t-draggable'
+        : ''
+    }`
     let style = this.state.hovering ? this.props.settings.hoverColors : this.props.colorStyle
 
     return (
-      <div ref='self' id={this.props.idMap} className={classes} draggable='true' style={style}
+      <div ref='self' id={this.props.idMap} className={classes} draggable={this.props.settings.dragEnabled} style={style}
         onDragStart={this.onDragStart}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}

@@ -13,6 +13,7 @@ const defaultSettings = {
     { color: 'black', backgroundColor: 'white' },
   ],
   hoverColors: { color: 'black', backgroundColor: '#efefef' },
+  dragEnabled: false,
 }
 
 class Table extends Component {
