@@ -63,8 +63,9 @@ class Table extends Component {
   }
 
   render() {
+    let style = { width: this.props.settings.tableWidth }
     return (
-        <div ref='table' className='t-table'>
+        <div ref='table' className='t-table' style={style}>
           <Header columns={this.props.columns} sortedColumns={this.state.sortedColumns} settings={this.state.settings} onHeadClick={this.handleHeadClick}/>
           <Body columns={this.props.columns}
                 data={this.props.data}

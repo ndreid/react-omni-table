@@ -96,7 +96,7 @@ const data = [
 ]
 
 const settings = {
-  // dragEnabled: true,
+  tableWidth: '100%',
 }
 
 const App = () => (

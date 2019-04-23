@@ -73,8 +73,8 @@ class Row extends Component {
       >
         {this.props.data.children
           ? this.state.hideChildren
-            ? <div className='t-cell t-expand-button' onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
-            : <div className='t-cell t-expand-button' onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
+            ? <div className='t-expand-button t-cell' onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
+            : <div className='t-expand-button t-cell' onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
           : <div className='t-cell t-expand-space'/>
         }
         {this.props.columns.map((col, idx) => {

@@ -142,6 +142,15 @@ class Body extends PureComponent {
 
   componentDidMount() {
     this.calcWindowRange()
+
+    let _this = this
+    setTimeout(() => {
+      window.requestAnimationFrame(() => {
+        if (_this.props.scrollbarYIsVisible !== (_this.refs.body.scrollHeight > _this.refs.body.clientHeight)) {
+          _this.props.setScrollbarYVisibility(!_this.props.scrollbarYIsVisible)
+        }
+      })
+    }, 0)
   }
 
   componentDidUpdate(prevProps) {

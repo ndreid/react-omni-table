@@ -30,6 +30,7 @@
 .t-head {
   box-sizing: border-box;
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   padding-right: 8px;
   cursor: pointer;
@@ -73,17 +74,21 @@
 .t-expand-button, .t-expand-space {
   width: 25px;
   min-width: 25px;
+  max-width: 25px;
 }
 
 .t-expand-button {
   justify-content: center;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
 
 .t-cell {
   box-sizing: border-box;
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   min-height: 25px;
+  user-select: none;
 }
