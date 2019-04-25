@@ -162,26 +162,27 @@ class Body extends PureComponent {
       for (let sortedColumn of this.props.sortedColumns) {
         let dataType = this.props.columns.find(c => c.dataIndex === sortedColumn.name).dataType
         data.sort((dataA, dataB) => {
-          let a = dataA[sortedColumn.name], b = dataB[sortedColumn.name]
+          let aVal = dataA[sortedColumn.name], bVal = dataB[sortedColumn.name]
+          let a, b
           let r = 0
           switch (dataType) {
             case DataTypes.Date:
-              let dateA = new Date(a), dateB = new Date(b)
-              r = dateA - dateB
+              let aDate = new Date(aVal), bDate = new Date(bVal)
+              a = isNaN(aDate) ? undefined : aDate
+              b = isNaN(bDate) ? undefined : bDate
               break
             case DataTypes.String:
-              let strA = typeof a === 'string' ? a.toUpperCase() : '', strB = typeof b === 'string' ? b.toUpperCase() : ''
-              r = strA < strB ? -1 : strA > strB ? 1 : 0
+              a = typeof aVal === 'string' ? aVal.toUpperCase() : ''
+              b = typeof bVal === 'string' ? bVal.toUpperCase() : ''
               break
             case DataTypes.Number:
             case DataTypes.Int:
-              r = a - b
-              break
             case DataTypes.Bool:
-              r = !a && b ? -1 : a && !b ? 1 : 0
+              a = aVal
+              b = bVal
               break
           }
-          return r * (sortedColumn.sortOrder === 'asc' ? 1 : -1)
+          return (!a-!b || +(a>b) || -(a<b)) * (sortedColumn.sortOrder === 'asc' ? 1 : -1)
         })
       }
       let flatData = this.flattenData(data)
