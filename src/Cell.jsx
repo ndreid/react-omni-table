@@ -60,7 +60,7 @@ class Cell extends PureComponent {
         if (validInput) { returnValue = target.value.trim() === '' ? undefined : Number(target.value) }
         break
       case DataTypes.Int:
-        validInput = target.value.trim() === '' || Number.isInteger(target.value)
+        validInput = target.value.trim() === '' || (!isNaN(target.value) && Number.isInteger(Number(target.value)))
         if (validInput) { returnValue = target.value.trim() === '' ? undefined : Number(target.value) }
         break
       case DataTypes.Bool:

@@ -9,7 +9,6 @@ import { addTable, delTable } from './redux/actions'
 
 const defaultSettings = {
   tierColors: [
-    { color: 'black', backgroundColor: 'darkgray' },
     { color: 'black', backgroundColor: 'white' },
   ],
   hoverColors: { color: 'black', backgroundColor: '#efefef' },

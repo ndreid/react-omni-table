@@ -83,7 +83,6 @@
   flex: 0 0 auto;
 }
 
-
 .t-cell {
   box-sizing: border-box;
   display: flex;
@@ -91,4 +90,5 @@
   align-items: center;
   min-height: 25px;
   user-select: none;
+  white-space: nowrap;
 }
