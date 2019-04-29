@@ -86,6 +86,7 @@ class Row extends Component {
                       setIsEditingCell={this.props.setIsEditingCell}
                       overrideProps={cellOverrideProps}
                       onCellInput={this.onCellInput}
+                      fixedWidthsStr={this.props.fixedWidthsStr}
                   />
         }
         )}
@@ -108,6 +109,7 @@ Row.propTypes = {
   handleHideChildren: PropTypes.func,
   onDragStart: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
+  fixedWidthsStr: PropTypes.string.isRequired,
 }
 
 Row.defaultProps = {

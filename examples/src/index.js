@@ -7,19 +7,19 @@ import { DragDropArea, Table } from '../../src';
 const columns = [
   {
     name: 'Name', dataIndex: 'name', dataType: 'string',
-    style: { width: '200px' },
+    style: { width: '50%', minWidth: '10rem' },
   },
   {
     name: 'Birthday', dataIndex: 'birthday', dataType: 'date', editable: true,
-    style: { width: '30%' },
+    style: { width: '30%', minWidth: '5rem' },
   },
   {
     name: 'Age', dataIndex: 'age', dataType: 'int', editable: true,
-    style: { width: '50%' },
+    style: { width: '2rem', minWidth: '3rem' },
   },
   {
     name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
-    style: { width: '20%', align: 'center' },
+    style: { width: '20%', minWidth: '3rem', align: 'center' },
   },
 ]
 

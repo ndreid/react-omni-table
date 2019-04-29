@@ -193,7 +193,6 @@ class Body extends PureComponent {
 
   render() {
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
-    // style={{ width: `calc(100% - 50px)`}}
     return (             
       <div ref='body' className={classes} onScroll={this.handleScroll} >
         <div key={-1} id='start' style={{minHeight: this.state.scrollBuffer.top}}/>
@@ -204,6 +203,7 @@ class Body extends PureComponent {
             idMap={info.idMap}
             data={data}
             columns={this.props.columns}
+            fixedWidthsStr={this.props.fixedWidthsStr}
             tier={info.tier}
             scrollbarYIsVisible={this.props.scrollbarYIsvisible}
             settings={this.props.settings}
@@ -227,6 +227,7 @@ Body.propTypes = {
   rowHeight: PropTypes.number.isRequired,
   settings: PropTypes.object.isRequired,
   sortedColumns: PropTypes.array.isRequired,
+  fixedWidthsStr: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = state => ({

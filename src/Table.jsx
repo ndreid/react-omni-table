@@ -63,16 +63,26 @@ class Table extends Component {
 
   render() {
     let style = { width: this.props.settings.tableWidth }
-    let fixedWidths = {
-      cm: 0, mm: 0, in: 0, px: 0, pt: 0, pc: 0
+    let fixedWidths = { cm: 0, mm: 0, in: 0, px: 0, pt: 0, pc: 0, em: 0, ex: 0, ch: 0, rem: 0, vw: 0, vh: 0, vmin: 0, vmax: 0, }
+    for (let col of this.props.columns) {
+      if (col.style && col.style.width && typeof col.style.width.replace === 'function') {
+        let splitIdx = col.style.width.replace(/\d/g, '|').lastIndexOf('|') + 1
+        if (splitIdx > 0) {
+          let value = col.style.width.substring(0, splitIdx)
+          let unit = col.style.width.substring(splitIdx)
+          if (!isNaN(value) && fixedWidths.hasOwnProperty(unit))
+            fixedWidths[unit] = fixedWidths[unit] + Number(value)
+        } 
+      }
     }
-    // let totalFixedWidth = this.props.columns.reduce((sum, col) => )
+    let fixedWidthsStr = Object.entries(fixedWidths).reduce((str, [unit, value]) => value > 0 ? `${str} - ${value}${unit}` : str, '')
     return (
         <div ref='table' className='t-table' style={style}>
           <Header columns={this.props.columns}
                   sortedColumns={this.state.sortedColumns}
                   settings={this.state.settings}
                   onHeadClick={this.handleHeadClick}
+                  fixedWidthsStr={fixedWidthsStr}
           />
           <Body columns={this.props.columns}
                 data={this.props.data}
@@ -81,6 +91,7 @@ class Table extends Component {
                 tableId={this.props.tableId}
                 settings={this.state.settings}
                 sortedColumns={this.state.sortedColumns}
+                fixedWidthsStr={fixedWidthsStr}
           />
         </div>
     )

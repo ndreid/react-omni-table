@@ -110,13 +110,13 @@ class Cell extends PureComponent {
   render() {
     const width = this.props.column.style
       ? String(this.props.column.style.width).includes('%')
-        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px) * ${parseFloat(this.props.column.style.width) / 100})`
+        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
         : this.props.column.style.width
       : undefined
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
       width: width,
-      minWidth: width,
+      minWidth: this.props.column.style ? this.props.column.style.minWidth : undefined,
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
       paddingLeft: 8 + (this.props.primary ? this.props.tier * 8 : 0),
     }
@@ -142,6 +142,7 @@ Cell.propTypes = {
   column: PropTypes.object.isRequired,
   onCellInput: PropTypes.func.isRequired,
   overrideProps: PropTypes.object,
+  fixedWidthsStr: PropTypes.string.isRequired,
 }
 
 Cell.defaultProps = {

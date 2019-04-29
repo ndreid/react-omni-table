@@ -25,7 +25,7 @@ class Header extends Component {
         <div className='t-expand-button t-cell'></div>
         {this.props.columns.map((col, idx) =>
             <Head key={idx} colNum={idx} column={col} onClick={this.props.onHeadClick} scrollbarYIsVisible={this.props.scrollbarYIsVisible}
-              columnSort={this.props.sortedColumns.find(sc => sc.name === col.dataIndex)} parent={this.refs.header}
+              columnSort={this.props.sortedColumns.find(sc => sc.name === col.dataIndex)} parent={this.refs.header} fixedWidthsStr={this.props.fixedWidthsStr}
             />
         )}
         {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
@@ -39,6 +39,7 @@ Header.propTypes = {
   scrollLeft: PropTypes.number,
   sortedColumns: PropTypes.array.isRequired,
   onHeadClick: PropTypes.func.isRequired,
+  fixedWidthsStr: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = state => ({
