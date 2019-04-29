@@ -63,9 +63,17 @@ class Table extends Component {
 
   render() {
     let style = { width: this.props.settings.tableWidth }
+    let fixedWidths = {
+      cm: 0, mm: 0, in: 0, px: 0, pt: 0, pc: 0
+    }
+    // let totalFixedWidth = this.props.columns.reduce((sum, col) => )
     return (
         <div ref='table' className='t-table' style={style}>
-          <Header columns={this.props.columns} sortedColumns={this.state.sortedColumns} settings={this.state.settings} onHeadClick={this.handleHeadClick}/>
+          <Header columns={this.props.columns}
+                  sortedColumns={this.state.sortedColumns}
+                  settings={this.state.settings}
+                  onHeadClick={this.handleHeadClick}
+          />
           <Body columns={this.props.columns}
                 data={this.props.data}
                 onCellInput={this.props.onCellInput}

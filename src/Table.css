@@ -10,16 +10,16 @@
   max-width: 100%;
   max-height: 100%;
   width: fit-content;
-  /* float: left; */
 }
 
 .t-header {
   display: flex;
-  /* flex: 0 0 auto; */
   border-bottom: solid rgb(167, 167, 167) 1px;
   min-height: 40px;
   overflow: auto;
   max-width: 100%;
+  /* min-width: -webkit-min-content;
+  min-width: min-content; */
   height: 40px;
 }
 
@@ -30,11 +30,10 @@
 .t-head {
   box-sizing: border-box;
   display: flex;
-  flex: 1 1 auto;
   align-items: center;
-  padding-right: 8px;
   cursor: pointer;
   user-select: none;
+  padding: 0px 8px;
 }
 
 .t-body {
@@ -56,11 +55,12 @@
   min-height: 25px;
   min-width: -webkit-min-content;
   min-width: min-content;
+  /* width: min-content;; */
 }
 
-/* .t-row:hover {
+.t-row:hover {
   background-color: #efefef;
-} */
+}
 
 .t-row.t-dragging {
   box-shadow: 0px 0px 10px 1px grey;
@@ -69,6 +69,18 @@
 
 .t-draggable {
   cursor: grab;
+}
+
+.t-cell {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: 25px;
+  user-select: none;
+  white-space: nowrap;
+  justify-content: 'center';
+  padding: 0px 8px;
+  width: 25%;
 }
 
 .t-expand-button, .t-expand-space {
@@ -81,14 +93,5 @@
   justify-content: center;
   cursor: pointer;
   flex: 0 0 auto;
-}
-
-.t-cell {
-  box-sizing: border-box;
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  min-height: 25px;
-  user-select: none;
-  white-space: nowrap;
+  padding: 0px;
 }

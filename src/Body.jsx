@@ -157,6 +157,7 @@ class Body extends PureComponent {
     if (prevProps.data !== this.props.data) {
       let flatData = this.flattenData(this.props.data)
       this.setState({ flatData, orderedData: [...flatData] })
+      this.calcWindowRange()
     } else if (prevProps.sortedColumns !== this.props.sortedColumns) {
       let data = [...this.props.data]
       for (let sortedColumn of this.props.sortedColumns) {
@@ -192,8 +193,9 @@ class Body extends PureComponent {
 
   render() {
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
+    // style={{ width: `calc(100% - 50px)`}}
     return (             
-      <div ref='body' className={classes} onScroll={this.handleScroll}>
+      <div ref='body' className={classes} onScroll={this.handleScroll} >
         <div key={-1} id='start' style={{minHeight: this.state.scrollBuffer.top}}/>
         {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }) => {
           let colorStyle = this.props.settings.tierColors[info.tier % this.props.settings.tierColors.length]
@@ -203,6 +205,7 @@ class Body extends PureComponent {
             data={data}
             columns={this.props.columns}
             tier={info.tier}
+            scrollbarYIsVisible={this.props.scrollbarYIsvisible}
             settings={this.props.settings}
             colorStyle={colorStyle}
             onCellInput={this.props.onCellInput}

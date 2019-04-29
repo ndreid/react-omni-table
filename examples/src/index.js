@@ -11,17 +11,26 @@ const columns = [
   },
   {
     name: 'Birthday', dataIndex: 'birthday', dataType: 'date', editable: true,
-    style: { width: '100px' },
+    style: { width: '30%' },
   },
   {
     name: 'Age', dataIndex: 'age', dataType: 'int', editable: true,
-    style: { width: '100px' },
+    style: { width: '50%' },
   },
   {
     name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
-    style: { width: '120px', align: 'center' },
+    style: { width: '20%', align: 'center' },
   },
 ]
+
+// const columns = [
+//   { name: 'Description', dataIndex: 'description', dataType: 'string', style: {  } },
+//   { name: 'Transaction Date', dataIndex: 'date', dataType: 'date', style: { width: '1px', align: 'center' } },
+//   { name: 'Amount', dataIndex: 'amount', dataType: 'number', style: { width: '10rem', align: 'right' } },
+//   { name: 'Account ID', dataIndex: 'accountId', dataType: 'string', style: { width: '10rem' } },
+// ]
+
+// const data = [{"id":0,"description":"Walmart","date":"2019-01-01T06:00:00.000Z","amount":15},{"id":1,"description":"7 Eleven","date":"2019-01-13T06:00:00.000Z","amount":26.54},{"id":2,"description":"ALDI","date":"2019-01-07T06:00:00.000Z","amount":52.9},{"id":3,"description":"Walmart","date":"2019-01-01T06:00:00.000Z","amount":15},{"id":4,"description":"7 Eleven","date":"2019-01-13T06:00:00.000Z","amount":26.54},{"id":5,"description":"ALDI","date":"2019-01-07T06:00:00.000Z","amount":52.9}]
 
 const data = [
   {
@@ -233,6 +242,7 @@ const data = [
 
 const settings = {
   tableWidth: '100%',
+  // dragEnabled: true,
 }
 
 const App = () => (

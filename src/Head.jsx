@@ -13,17 +13,21 @@ class Head extends Component {
   }
 
   render() {
+    const width = this.props.column.style
+      ? String(this.props.column.style.width).includes('%')
+        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px) * ${parseFloat(this.props.column.style.width) / 100})`
+        : this.props.column.style.width
+      : undefined
+    const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
-      width: this.props.column.style ? this.props.column.style.width : undefined,
-      minWidth: this.props.column.style ? this.props.column.style.width : undefined,
-      justifyContent: this.props.colNum !== 0 ? 'center' : undefined,
-      textAlign: this.props.column.style ? this.props.column.style.align : undefined,
-      paddingLeft: 8,
+      width: width,
+      minWidth: width,
+      justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'
     }
 
+    console.log(style)
     return (
-      <React.Fragment>
-      <div className='t-head' style={style} onClick={this.onClick}>
+      <div ref='head' className='t-head' style={style} onClick={this.onClick} style={style}>
         <b>{this.props.column.name}</b>
         { this.props.columnSort
           ? this.props.columnSort.sortOrder === 'asc'
@@ -34,9 +38,7 @@ class Head extends Component {
             // </div>
           : undefined
         }
-        
       </div>
-      </React.Fragment>
     )
   }
 }

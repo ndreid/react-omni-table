@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Cell from './Cell'
 import { PlusSVG, MinusSVG } from './SVG'
 
-
 import { connect } from 'react-redux'
 import { setIsEditingCell } from './redux/actions'
 
