@@ -88,7 +88,8 @@ class Row extends Component {
                       onCellInput={this.onCellInput}
                       fixedWidthsStr={this.props.fixedWidthsStr}
                   />
-        })}
+        }
+        )}
       </div>
     )
   }

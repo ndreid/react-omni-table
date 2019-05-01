@@ -108,11 +108,11 @@ class Cell extends PureComponent {
   }
 
   render() {
-    const width = this.props.column.style ? this.props.column.style.width : undefined
-      // ? String(this.props.column.style.width).includes('%')
-      //   ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
-      //   : this.props.column.style.width
-      // : '13rem'
+    const width = this.props.column.style
+      ? String(this.props.column.style.width).includes('%')
+        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
+        : this.props.column.style.width
+      : '13rem'
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
       width: width,
@@ -139,14 +139,11 @@ class Cell extends PureComponent {
 Cell.propTypes = {
   primary: PropTypes.bool.isRequired,
   tier: PropTypes.number.isRequired,
-  idMap: PropTypes.string.isRequired,
   data: PropTypes.any,
   column: PropTypes.object.isRequired,
+  onCellInput: PropTypes.func.isRequired,
   overrideProps: PropTypes.object,
-  onCellInput: PropTypes.func,
-  onDragStart: PropTypes.func.isRequired,
-  onMouseEnter: PropTypes.func.isRequired,
-  onMouseLeave: PropTypes.func.isRequired,
+  fixedWidthsStr: PropTypes.string.isRequired,
 }
 
 Cell.defaultProps = {

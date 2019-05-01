@@ -5,8 +5,6 @@ import { Row } from './'
 
 import { connect } from 'react-redux'
 import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection } from './redux/actions'
-import Column from './Column';
-import ExpandColumn from './ExpandColumn';
 
 class Body extends PureComponent {
   constructor(props) {
@@ -16,7 +14,6 @@ class Body extends PureComponent {
     this.handleShowHideToggle = this.handleShowHideToggle.bind(this)
     this.handleDragStart = this.handleDragStart.bind(this)
     this.handleMouseEnter = this.handleMouseEnter.bind(this)
-    this.handleMouseLeave = this.handleMouseLeave.bind(this)
 
     let flatData = this.flattenData(this.props.data)
     this.state = {
@@ -143,10 +140,6 @@ class Body extends PureComponent {
     }
   }
 
-  handleMouseLeave(e, idMap) {
-
-  }
-
   componentDidMount() {
     this.calcWindowRange()
 
@@ -200,28 +193,10 @@ class Body extends PureComponent {
 
   render() {
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
-    let data = this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1)
     return (             
       <div ref='body' className={classes} onScroll={this.handleScroll} >
         <div key={-1} id='start' style={{minHeight: this.state.scrollBuffer.top}}/>
-        <ExpandColumn
-          data={data}
-          onExpandClick={this.handleShowHideToggle}
-        />
-        {this.props.columns.map((col, index) => {
-          return <Column 
-            key={index}
-            index={index}
-            column={col}
-            rowData={data}
-            onCellInput={this.props.onCellInput}
-            onDragStart={this.handleDragStart}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
-            onResize={this.props.onResize}
-          />
-        })}
-        {/* {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }) => {
+        {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }) => {
           let colorStyle = this.props.settings.tierColors[info.tier % this.props.settings.tierColors.length]
           return <Row key={info.idMap}
             id={data.id}
@@ -238,7 +213,7 @@ class Body extends PureComponent {
             onDragStart={this.handleDragStart}
             onMouseEnter={this.handleMouseEnter}
           />
-        })} */}
+        })}
         <div key={Infinity} id='end' style={{minHeight: this.state.scrollBuffer.bottom}}/>
       </div>
     )
@@ -252,7 +227,7 @@ Body.propTypes = {
   rowHeight: PropTypes.number.isRequired,
   settings: PropTypes.object.isRequired,
   columnSorts: PropTypes.array.isRequired,
-  onResize: PropTypes.func.isRequired,
+  fixedWidthsStr: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = state => ({

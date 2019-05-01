@@ -16,30 +16,23 @@ class Header extends Component {
       this.props.columns !== nextProps.columns
       || this.props.columnSorts !== nextProps.columnSorts
       || this.props.scrollbarYIsVisible !== nextProps.scrollbarYIsVisible
-      || this.props.columnWidths !== nextProps.columnWidths
+      || this.props.fixedWidthsStr !== nextProps.fixedWidthsStr
     )
   }
 
   render() {
-    console.log(this.props.columnWidths)
     return (
-      // <div ref='header' className='t-header-wrapper'>
-        <div ref='header' className='t-header'>
-          <div className='t-expand-button t-head'></div>
+      <div ref='header' className='t-header-wrapper'>
+        <div className='t-header'>
+          <div className='t-expand-button t-cell'></div>
           {this.props.columns.map((col, idx) =>
-              <Head key={idx}
-                colNum={idx}
-                column={col}
-                onClick={this.props.onHeadClick}
-                scrollbarYIsVisible={this.props.scrollbarYIsVisible}
-                columnSort={this.props.columnSorts.find(sc => sc.name === col.dataIndex)}
-                columnWidth={this.props.columnWidths[col.dataIndex]}
-                parent={this.refs.header}
+              <Head key={idx} colNum={idx} column={col} onClick={this.props.onHeadClick} scrollbarYIsVisible={this.props.scrollbarYIsVisible}
+                columnSort={this.props.columnSorts.find(sc => sc.name === col.dataIndex)} parent={this.refs.header} fixedWidthsStr={this.props.fixedWidthsStr}
               />
           )}
           {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
         </div>
-      // </div>
+      </div>
     )
   }
 }
@@ -48,7 +41,7 @@ Header.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   scrollLeft: PropTypes.number,
   columnSorts: PropTypes.array.isRequired,
-  columnWidths: PropTypes.object.isRequired,
+  fixedWidthsStr: PropTypes.string.isRequired,
   onHeadClick: PropTypes.func.isRequired,
 }
 

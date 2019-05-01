@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import './Table.css'
 import Header from './Header'
 import Body from './Body'
-// import ResizeDetector from 'react-resize-detector'
+import ResizeDetector from 'react-resize-detector'
 
 import { addTable, delTable } from './redux/actions'
 
@@ -28,45 +28,45 @@ class Table extends Component {
       columnSorts: [],
       columns: props.columns,
       columnTotalFixedWidths: {},
-      columnWidths: {},
     }
 
     this.makeStateColumns = this.makeStateColumns.bind(this)
     this.handleHeadClick = this.handleHeadClick.bind(this)
-    this.handleColumnResize = this.handleColumnResize.bind(this)
+    this.handleResize = this.handleResize.bind(this)
   }
 
   makeStateColumns(propColumns) {
+    let tableWidth = this.refs.table.clientWidth
     let columns = JSON.parse(JSON.stringify(propColumns))
     let columnTotalFixedWidths = {
       cm: 0, mm: 0, in: 0, px: 0, pt: 0,
       pc: 0, em: 0, ex: 0, ch: 0, rem: 0,
       vw: 0, vh: 0, vmin: 0, vmax: 0
     }
-    // let totalPct = 0
-    // let columnsWithoutWidth = columns.reduce((cnt, col) => cnt + ((!col.style || col.style.width === undefined) ? 1 : 0), 0)
-    // for (let col of columns) {
-    //   if (col.style && col.style.width && typeof col.style.width.replace === 'function') {
-    //     let splitIdx = col.style.width.replace(/\d/g, '|').lastIndexOf('|') + 1
-    //     if (splitIdx > 0) {
-    //       let value = col.style.width.substring(0, splitIdx)
-    //       let unit = col.style.width.substring(splitIdx)
-    //       if (isNaN(value))
-    //         continue
-    //       if (unit === '%')
-    //         totalPct += Number(value)
-    //       else if (columnTotalFixedWidths.hasOwnProperty(unit))
-    //         columnTotalFixedWidths[unit] += Number(value)
-    //     } 
-    //   }
-    // }
+    let totalPct = 0
+    let columnsWithoutWidth = columns.reduce((cnt, col) => cnt + ((!col.style || col.style.width === undefined) ? 1 : 0), 0)
+    for (let col of columns) {
+      if (col.style && col.style.width && typeof col.style.width.replace === 'function') {
+        let splitIdx = col.style.width.replace(/\d/g, '|').lastIndexOf('|') + 1
+        if (splitIdx > 0) {
+          let value = col.style.width.substring(0, splitIdx)
+          let unit = col.style.width.substring(splitIdx)
+          if (isNaN(value))
+            continue
+          if (unit === '%')
+            totalPct += Number(value)
+          else if (columnTotalFixedWidths.hasOwnProperty(unit))
+            columnTotalFixedWidths[unit] += Number(value)
+        } 
+      }
+    }
 
-    // for (let col of columns) {
-    //   if (!col.style)
-    //     col.style = {}
-    //   if (!col.style.width)
-    //     col.style.width = `${(100 - totalPct) / columnsWithoutWidth}%`
-    // }
+    for (let col of columns) {
+      if (!col.style)
+        col.style = {}
+      if (!col.style.width)
+        col.style.width = `${(100 - totalPct) / columnsWithoutWidth}%`
+    }
 
     this.setState({ columns, columnTotalFixedWidths })
   }
@@ -88,11 +88,6 @@ class Table extends Component {
     this.setState({ columnSorts })
   }
 
-  handleColumnResize(columnName, width) {
-    console.log(columnName, width)
-    this.setState({ columnWidths: { ...this.state.columnWidths, [columnName]: width } })
-  }
-
   componentDidMount() {
     this.makeStateColumns(this.props.columns)
     this.props.addTable(this.props.tableId)
@@ -111,26 +106,35 @@ class Table extends Component {
     }
   }
 
+  handleResize() {
+    console.log('Table resized!!')
+  }
+
   render() {
+    console.log(this.state.settings.tableWidth)
     let style = { width: this.props.settings.tableWidth }
+    let fixedWidthsStr = Object.entries(this.state.columnTotalFixedWidths).reduce((str, [unit, value]) => value > 0 && unit !== '%' ? `${str} - ${value}${unit}` : str, '')
+    
+    console.log(this.state.columns)
     return (
-      <div ref='table' className='t-table' style={style}>
-        <Header columns={this.state.columns}
-                columnSorts={this.state.columnSorts}
-                columnWidths={this.state.columnWidths}
+        <div ref='table' className='t-table' style={style}>
+          <Header columns={this.state.columns}
+                  columnSorts={this.state.columnSorts}
+                  settings={this.state.settings}
+                  onHeadClick={this.handleHeadClick}
+                  fixedWidthsStr={fixedWidthsStr}
+          />
+          <Body columns={this.state.columns}
+                data={this.props.data}
+                onCellInput={this.props.onCellInput}
+                rowHeight={this.props.rowHeight}
+                tableId={this.props.tableId}
                 settings={this.state.settings}
-                onHeadClick={this.handleHeadClick}
-        />
-        <Body columns={this.state.columns}
-              data={this.props.data}
-              rowHeight={this.props.rowHeight}
-              tableId={this.props.tableId}
-              settings={this.state.settings}
-              columnSorts={this.state.columnSorts}
-              onCellInput={this.props.onCellInput}
-              onResize={this.handleColumnResize}
-        />
-      </div>
+                columnSorts={this.state.columnSorts}
+                fixedWidthsStr={fixedWidthsStr}
+          />
+          <ResizeDetector handleWidth handleHeight onResize={this.handleResize} />
+        </div>
     )
   }
 }

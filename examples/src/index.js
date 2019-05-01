@@ -7,19 +7,19 @@ import { DragDropArea, Table } from '../../src';
 const columns = [
   {
     name: 'Name', dataIndex: 'name', dataType: 'string',
-    style: { width: '50%', minWidth: '10rem' },
+    style: { minWidth: '20rem' },
   },
   {
     name: 'Birthday', dataIndex: 'birthday', dataType: 'date', editable: true,
-    style: { width: '30%', minWidth: '5rem' },
+    style: { minWidth: '20rem' },
   },
   {
     name: 'Age', dataIndex: 'age', dataType: 'int', editable: true,
-    style: { width: '2rem', minWidth: '3rem' },
+    style: { minWidth: '6rem' },
   },
   {
-    name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
-    style: { width: '20%', minWidth: '3rem', align: 'center' },
+    name: 'Home and a really long column name that goes on forever', dataIndex: 'homeOwner', dataType: 'bool',
+    style: { minWidth: '4rem',  align: 'center' },
   },
 ]
 
@@ -37,14 +37,14 @@ const data = [
     id: '1',
     name: 'John Smith',
     birthday: '1/1/2015',
-    age: 4,
+    age: 41234555,
     homeOwner: false,
   },
   {
     id: '2',
     name: 'Susie Longstocking',
     birthday: '2/2/1989',
-    age: 30,
+    age: 30234,
     homeOwner: true,
     children: [
       {
@@ -77,7 +77,7 @@ const data = [
     age: 4,
     homeOwner: false,
   },
-  { id: '7', name: 'John Smith', birthday: '1/1/2015', age: 4, homeOwner: false, },
+  { id: '7', name: 'John Smith', birthday: '1/1/2015', age: 4234234234324234, homeOwner: false, },
   { id: '8', name: 'John Smith', birthday: '2/1/2018', age: 4, homeOwner: false, },
   { id: '9', name: 'John Smith', birthday: '3/1/2016', age: 4, homeOwner: false, },
   { id: '10', name: 'John Smith', birthday: '4/1/1992', age: 4, homeOwner: false, },
