@@ -24,10 +24,9 @@ class Head extends Component {
       width: width,
       minWidth: width,
       maxWidth: width,
-      justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'
+      textAlign: align,
     }
 
-    console.log(style)
     return (
       <div ref='head' className='t-head' style={style} onClick={this.onClick} style={style}>
         {this.props.column.name}

@@ -4,7 +4,7 @@ import DataTypes from './DataTypes'
 import { Row } from './'
 
 import { connect } from 'react-redux'
-import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection } from './redux/actions'
+import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection, setHover } from './redux/actions'
 import Column from './Column';
 import ExpandColumn from './ExpandColumn';
 
@@ -35,6 +35,7 @@ class Body extends PureComponent {
 
     this.scrollTop = 0
     this.prevY = 0
+    this.lastHoverIdMap = undefined
   }
 
   handleScroll(e) {
@@ -127,6 +128,8 @@ class Body extends PureComponent {
   }
 
   handleMouseEnter(e, idMap) {
+    this.lastHoverIdMap = idMap
+    this.props.setHover(this.props.tableId, idMap)
     let direction = e.movementY < 0 ? 'up' : 'down'
     if (this.props.dragSource
       && this.props.dragSource.idMap !== idMap
@@ -143,8 +146,10 @@ class Body extends PureComponent {
     }
   }
 
-  handleMouseLeave(e, idMap) {
-
+  handleMouseLeave(idMap) {
+    if (this.lastHoverIdMap === idMap) {
+      this.props.setHover()
+    }
   }
 
   componentDidMount() {
@@ -205,6 +210,7 @@ class Body extends PureComponent {
       <div ref='body' className={classes} onScroll={this.handleScroll} >
         <div key={-1} id='start' style={{minHeight: this.state.scrollBuffer.top}}/>
         <ExpandColumn
+          tableId={this.props.tableId}
           data={data}
           onExpandClick={this.handleShowHideToggle}
         />
@@ -212,6 +218,7 @@ class Body extends PureComponent {
           return <Column 
             key={index}
             index={index}
+            tableId={this.props.tableId}
             column={col}
             rowData={data}
             onCellInput={this.props.onCellInput}
@@ -246,6 +253,7 @@ class Body extends PureComponent {
 }
 
 Body.propTypes = {
+  tableId: PropTypes.any.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   onCellInput: PropTypes.func,
@@ -268,6 +276,7 @@ const mapDispatchToProps = {
   setDragSource,
   setDropTarget,
   setDragDirection,
+  setHover,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Body)

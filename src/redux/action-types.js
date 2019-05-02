@@ -9,3 +9,5 @@ export const DEL_TABLE = 'DEL_TABLE'
 export const SET_DRAG_SOURCE = 'SET_DRAG_SOURCE'
 export const SET_DROP_TARGET = 'SET_DROP_TARGET'
 export const SET_DRAG_DIRECTION = 'SET_DRAG_DIRECTION'
+
+export const SET_HOVER = 'SET_HOVER'

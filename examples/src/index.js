@@ -18,7 +18,7 @@ const columns = [
     style: { minWidth: '6rem' },
   },
   {
-    name: 'Home and a really long column name that goes on forever', dataIndex: 'homeOwner', dataType: 'bool',
+    name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
     style: { minWidth: '4rem',  align: 'center' },
   },
 ]

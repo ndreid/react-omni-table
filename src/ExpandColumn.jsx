@@ -9,6 +9,7 @@ class ExpandColumn extends PureComponent {
         {this.props.data.map(({ data, info }, index) =>
           <ExpandCell key={index}
             idMap={info.idMap}
+            tableId={this.props.tableId}
             hasChildren={!!data.children}
             onClick={this.props.onExpandClick}
           />
@@ -22,6 +23,7 @@ class ExpandColumn extends PureComponent {
 }
 
 ExpandColumn.propTypes = {
+  tableId: PropTypes.any.isRequired,
   data: PropTypes.array.isRequired,
   onExpandClick: PropTypes.func.isRequired,
 }

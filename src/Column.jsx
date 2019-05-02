@@ -23,17 +23,18 @@ class Column extends PureComponent {
         {this.props.rowData.map(({data, info}, idx) => {
           let cellOverrideProps = data.cellOverrideProps ? data.cellOverrideProps[this.props.column.dataIndex] : undefined
           return <Cell key={idx}
-                      primary={this.props.index === 0}
-                      column={this.props.column}
-                      tier={info.tier}
-                      idMap={info.idMap}
-                      data={data[this.props.column.dataIndex]}
-                      overrideProps={cellOverrideProps}
-                      onCellInput={this.props.onCellInput}
-                      onDragStart={this.props.onDragStart}
-                      onMouseEnter={this.props.onMouseEnter}
-                      onMouseLeave={this.props.onMouseLeave}
-                      setIsEditingCell={this.props.setIsEditingCell}
+                    tier={info.tier}
+                    idMap={info.idMap}
+                    primary={this.props.index === 0}
+                    tableId={this.props.tableId}
+                    column={this.props.column}
+                    data={data[this.props.column.dataIndex]}
+                    overrideProps={cellOverrideProps}
+                    onCellInput={this.props.onCellInput}
+                    onDragStart={this.props.onDragStart}
+                    onMouseEnter={this.props.onMouseEnter}
+                    onMouseLeave={this.props.onMouseLeave}
+                    setIsEditingCell={this.props.setIsEditingCell}
                   />
         })}
         <ResizeDetector handleWidth handleHeight onResize={this.onResize} />
@@ -45,6 +46,7 @@ class Column extends PureComponent {
 Column.propTypes = {
   //props
   index: PropTypes.number.isRequired,
+  tableId: PropTypes.any.isRequired,
   column: PropTypes.object.isRequired,
   rowData: PropTypes.array.isRequired,
   onCellInput: PropTypes.func,

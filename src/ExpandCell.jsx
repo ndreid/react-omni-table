@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { PlusSVG, MinusSVG } from './SVG'
+import { connect } from 'react-redux'
 
 class ExpandCell extends PureComponent {
   constructor() {
@@ -30,9 +31,19 @@ class ExpandCell extends PureComponent {
 
 ExpandCell.propTypes = {
   idMap: PropTypes.string.isRequired,
+  tableId: PropTypes.any.isRequired,
   hasChildren: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   color: PropTypes.string,
 }
 
-export default ExpandCell
+const getIsHovered = (hover, tableId, idMap) =>
+  hover
+  && hover.tableId === tableId
+  && hover.idMap === idMap
+
+const mapStateToProps = (state, props) => ({
+  isHovered: getIsHovered(state.hover, props.tableId, props.idMap)
+})
+
+export default connect(mapStateToProps)(ExpandCell)

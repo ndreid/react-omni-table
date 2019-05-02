@@ -121,7 +121,8 @@ class Table extends Component {
                 settings={this.state.settings}
                 onHeadClick={this.handleHeadClick}
         />
-        <Body columns={this.state.columns}
+        <Body tableId={this.props.tableId}
+              columns={this.state.columns}
               data={this.props.data}
               rowHeight={this.props.rowHeight}
               tableId={this.props.tableId}

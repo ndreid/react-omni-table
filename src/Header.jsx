@@ -21,7 +21,6 @@ class Header extends Component {
   }
 
   render() {
-    console.log(this.props.columnWidths)
     return (
       // <div ref='header' className='t-header-wrapper'>
         <div ref='header' className='t-header'>
@@ -37,7 +36,7 @@ class Header extends Component {
                 parent={this.refs.header}
               />
           )}
-          {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
+          {this.props.scrollbarYIsVisible ? <div className='t-head' style={{width: 17}}/> : undefined}
         </div>
       // </div>
     )
