@@ -1,9 +1,9 @@
-.t-ddc {
+ .t-ddc {
    max-width: 100%;
    max-height: 100%;
-}
+ }
  
-.t-table {
+ .t-table {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -13,49 +13,48 @@
   width: fit-content;
 }
 
-.t-header-wrapper {
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
+.t-header {
+  display: inline-block;
   overflow-x: auto;
-  min-height: min-content;
+  min-height: fit-content;
   border-bottom: solid rgb(167, 167, 167) 1px;
 }
 
-.t-header-wrapper::-webkit-scrollbar {
+.t-header::-webkit-scrollbar {
   display: none;
-}
-
-.t-header {
-  display: flex;
-  /* min-height: 40px; */
-  min-width: -webkit-min-content;
-  min-width: min-content;
-  min-height: -webkit-min-content;
-  min-height: min-content;
-  height: 40px;
 }
 
 .t-head {
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
+  display: table-cell;
   cursor: pointer;
   user-select: none;
-  padding: 0px 8px;
+  padding: .75rem .5rem;
+  vertical-align: middle;
+  min-height: 100%;
+}
+
+.t-body-wrapper {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
 .t-body {
   max-width: 100%;
   display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  overflow: auto;
+  flex-direction: row;
 }
 
 .t-body.t-dragging {
   cursor: grabbing !important;
+}
+
+.t-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: fit-content;
 }
 
 .t-row {
@@ -89,6 +88,23 @@
   user-select: none;
   white-space: nowrap;
   padding: 0px 8px;
+  flex: 1 1 auto;
+  border-bottom: solid rgb(167, 167, 167) 1px;
+}
+
+.t-cell-hover {
+  /* background-color: #efefef; */
+}
+
+.t-cell:hover {
+  box-shadow: 0px 0px 10px 1px grey;
+  background-color: #efefef;
+}
+
+.t-expand-col {
+  width: 25px;
+  min-width: 25px;
+  max-width: 25px;
 }
 
 .t-expand-button, .t-expand-space {

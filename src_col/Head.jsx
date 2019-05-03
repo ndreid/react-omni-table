@@ -13,22 +13,23 @@ class Head extends Component {
   }
 
   render() {
-    const width = this.props.column.style
-      ? String(this.props.column.style.width).includes('%')
-        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
-        : this.props.column.style.width
-      : '13rem'
+    const width = this.props.columnWidth
+    // const width = this.props.column.style ? this.props.column.style.width : undefined
+      // ? String(this.props.column.style.width).includes('%')
+      //   ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
+      //   : this.props.column.style.width
+      // : '13rem'
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
       width: width,
-      minWidth: this.props.column.style ? this.props.column.style.minWidth : undefined,
-      justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'
+      minWidth: width,
+      maxWidth: width,
+      textAlign: align,
     }
 
-    console.log(style)
     return (
       <div ref='head' className='t-head' style={style} onClick={this.onClick} style={style}>
-        <b>{this.props.column.name}</b>
+        {this.props.column.name}
         { this.props.columnSort
           ? this.props.columnSort.sortOrder === 'asc'
             ? <UpSVG width={7} height={5} color='green'/>
@@ -47,6 +48,7 @@ Head.propTypes = {
   column: PropTypes.object.isRequired,
   colNum: PropTypes.number.isRequired,
   columnSort: PropTypes.object,
+  columnWidth: PropTypes.number,
   onClick: PropTypes.func.isRequired,
 }
 

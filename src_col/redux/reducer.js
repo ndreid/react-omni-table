@@ -1,4 +1,4 @@
-import { SET_SCROLL_LEFT, SET_SCROLLBAR_Y_VISIBILITY, SET_IS_EDITING_CELL, SET_CURRENT_DRAG, ADD_TABLE, DEL_TABLE, SET_DRAG_SOURCE, SET_DROP_TARGET, SET_DRAG_DIRECTION } from './action-types'
+import { SET_SCROLL_LEFT, SET_SCROLLBAR_Y_VISIBILITY, SET_IS_EDITING_CELL, SET_CURRENT_DRAG, ADD_TABLE, DEL_TABLE, SET_DRAG_SOURCE, SET_DROP_TARGET, SET_DRAG_DIRECTION, SET_HOVER } from './action-types'
 
 const initialState = {
   scrollLeft: 0,
@@ -56,6 +56,11 @@ const reducer = (state = initialState, { type, payload }) => {
         dragDirection: payload
       }
     default: return state
+    case SET_HOVER:
+      return {
+        ...state,
+        hover: payload
+      }
   }
 }
 

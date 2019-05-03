@@ -1,4 +1,4 @@
-import { SET_SCROLL_LEFT, SET_SCROLLBAR_Y_VISIBILITY, SET_IS_EDITING_CELL, SET_CURRENT_DRAG, ADD_TABLE, DEL_TABLE, SET_DRAG_SOURCE, SET_DROP_TARGET, SET_DRAG_DIRECTION } from './action-types'
+import { SET_SCROLL_LEFT, SET_SCROLLBAR_Y_VISIBILITY, SET_IS_EDITING_CELL, SET_CURRENT_DRAG, ADD_TABLE, DEL_TABLE, SET_DRAG_SOURCE, SET_DROP_TARGET, SET_DRAG_DIRECTION, SET_HOVER } from './action-types'
 import { coalesce } from '../extensions'
 
 export const setScrollbarYVisibility = isVisible => ({
@@ -44,4 +44,9 @@ export const setDropTarget = (tableId, idMap) => ({
 export const setDragDirection = direction => ({
   type: SET_DRAG_DIRECTION,
   payload: direction,
+})
+
+export const setHover = (tableId, idMap) => ({
+  type: SET_HOVER,
+  payload: coalesce(tableId, idMap) === undefined ? undefined : { tableId, idMap }
 })

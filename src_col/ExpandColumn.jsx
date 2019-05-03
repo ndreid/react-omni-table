@@ -17,7 +17,6 @@ class ExpandColumn extends PureComponent {
       </div>
     )
 
-    console.log(val)
     return val
   }
 }

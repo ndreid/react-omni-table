@@ -13,10 +13,6 @@ class Column extends PureComponent {
     this.props.onResize(this.props.column.dataIndex, this.refs.column.clientWidth)
   }
 
-  componentDidMount() {
-    console.log(this.refs.column.clientWidth)
-  }
-
   render() {
     return (
       <div ref='column' className='t-col'>

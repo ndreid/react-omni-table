@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import moment from 'moment'
 import DataTypes from './DataTypes'
 import { isNumber, numFunc, coalesce } from './extensions';
@@ -17,6 +18,9 @@ class Cell extends PureComponent {
     this.handleDoubleClick = this.handleDoubleClick.bind(this)
     this.handleKeyUp = this.handleKeyUp.bind(this)
     this.handleInput = this.handleInput.bind(this)
+    this.onDragStart = this.onDragStart.bind(this)
+    this.onMouseEnter = this.onMouseEnter.bind(this)
+    this.onMouseLeave = this.onMouseLeave.bind(this)
   }
 
   getFormattedData() {
@@ -96,6 +100,18 @@ class Cell extends PureComponent {
     }
   }
 
+  onDragStart() {
+    this.props.onDragStart(this.props.idMap)
+  }
+
+  onMouseEnter(e) {
+    this.props.onMouseEnter(e, this.props.idMap)
+  }
+
+  onMouseLeave() {
+    this.props.onMouseLeave(this.props.idMap)
+  }
+
   componentDidUpdate() {
     if (this.state.dataType !== (this.props.overrideProps.dataType || this.props.column.dataType || DataTypes.String)
       || this.state.editable !== coalesce(this.props.overrideProps.editable, this.props.column.editable, false)
@@ -108,11 +124,11 @@ class Cell extends PureComponent {
   }
 
   render() {
-    const width = this.props.column.style
-      ? String(this.props.column.style.width).includes('%')
-        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
-        : this.props.column.style.width
-      : '13rem'
+    const width = this.props.column.style ? this.props.column.style.width : undefined
+      // ? String(this.props.column.style.width).includes('%')
+      //   ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
+      //   : this.props.column.style.width
+      // : '13rem'
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
       width: width,
@@ -122,14 +138,16 @@ class Cell extends PureComponent {
       paddingLeft: 8 + (this.props.primary ? this.props.tier * 8 : 0),
     }
 
+    const className = `t-cell${this.props.isHovered ? ' t-cell-hover' : ''}`
+
     return this.state.dataType === DataTypes.Bool
-      ? <div className={'t-cell'} style={style} >
+      ? <div className={className} style={style} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
           <input type='checkbox' checked={this.props.data} onChange={this.handleInput}/>
         </div>
       : this.state.editMode
-        ? <input defaultValue={this.props.data} onFocus={this.handleFocus} className='t-cell' style={style} onBlur={this.handleInput} autoFocus onKeyUp={this.handleKeyUp}/>
+        ? <input defaultValue={this.props.data} onFocus={this.handleFocus} className={className} style={style} onBlur={this.handleInput} autoFocus onKeyUp={this.handleKeyUp}/>
         : (
-          <div className='t-cell' style={style} onDoubleClick={this.handleDoubleClick}>
+          <div className={className} style={style} onDoubleClick={this.handleDoubleClick} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
             {this.getFormattedData()}
           </div>
       )
@@ -137,17 +155,30 @@ class Cell extends PureComponent {
 }
 
 Cell.propTypes = {
-  primary: PropTypes.bool.isRequired,
   tier: PropTypes.number.isRequired,
+  idMap: PropTypes.string.isRequired,
+  primary: PropTypes.bool.isRequired,
+  tableId: PropTypes.any.isRequired,
   data: PropTypes.any,
   column: PropTypes.object.isRequired,
-  onCellInput: PropTypes.func.isRequired,
   overrideProps: PropTypes.object,
-  fixedWidthsStr: PropTypes.string.isRequired,
+  onCellInput: PropTypes.func,
+  onDragStart: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func.isRequired,
+  onMouseLeave: PropTypes.func.isRequired,
 }
 
 Cell.defaultProps = {
   overrideProps: {},
 }
 
-export default Cell
+const getIsHovered = (hover, tableId, idMap) =>
+  hover
+  && hover.tableId === tableId
+  && hover.idMap === idMap
+
+const mapStateToProps = (state, props) => ({
+  isHovered: getIsHovered(state.hover, props.tableId, props.idMap)
+})
+
+export default connect(mapStateToProps)(Cell)

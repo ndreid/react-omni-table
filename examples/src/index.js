@@ -242,12 +242,12 @@ const data = [
 
 const settings = {
   tableWidth: '100%',
-  // dragEnabled: true,
+  dragEnabled: true,
 }
 
 const App = () => (
   <DragDropArea>
-    <Table tableId='exampleTable' columns={columns} data={data} rowHeight={26} settings={settings}/>
+    <Table tableId='exampleTable' columns={columns} data={data} rowHeight={25} settings={settings}/>
   </DragDropArea>
 );
 render(<App />, document.getElementById("root"));
