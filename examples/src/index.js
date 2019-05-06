@@ -243,6 +243,8 @@ const data = [
 const settings = {
   tableWidth: '100%',
   dragEnabled: true,
+  // tierColors: [{ color: 'white', backgroundColor: 'darkblue', borderColor: 'black' }],
+  // headerColors: { color: 'white', backgroundColor: 'darkblue' , borderColor: 'black' }
 }
 
 const App = () => (

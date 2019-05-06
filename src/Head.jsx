@@ -13,14 +13,9 @@ class Head extends Component {
   }
 
   render() {
-    const width = this.props.column.style
-      ? String(this.props.column.style.width).includes('%')
-        ? `calc((100% - ${this.props.scrollbarYIsVisible ? '42' : '25'}px${this.props.fixedWidthsStr}) * ${parseFloat(this.props.column.style.width) / 100})`
-        : this.props.column.style.width
-      : '13rem'
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
-      width: width,
+      width: this.props.width,
       minWidth: this.props.column.style ? this.props.column.style.minWidth : undefined,
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'
     }
@@ -33,9 +28,6 @@ class Head extends Component {
           ? this.props.columnSort.sortOrder === 'asc'
             ? <UpSVG width={7} height={5} color='green'/>
             : <DownSVG width={7} height={5} color='red'/>
-            // <div style={{ position: 'relative', display: 'inline', bottom: '0', left: '0' }}>
-            //   {this.props.columnSort.sortOrder}
-            // </div>
           : undefined
         }
       </div>
@@ -44,9 +36,10 @@ class Head extends Component {
 }
 
 Head.propTypes = {
-  column: PropTypes.object.isRequired,
   colNum: PropTypes.number.isRequired,
+  column: PropTypes.object.isRequired,
   columnSort: PropTypes.object,
+  width: PropTypes.number,
   onClick: PropTypes.func.isRequired,
 }
 

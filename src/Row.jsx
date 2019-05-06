@@ -12,6 +12,7 @@ class Row extends Component {
 
     this.state = {
       hideChildren: false,
+      hovering: false,
     }
 
     this.showHideToggle = this.showHideToggle.bind(this)
@@ -19,6 +20,8 @@ class Row extends Component {
     this.onDragStart = this.onDragStart.bind(this)
     this.onMouseEnter = this.onMouseEnter.bind(this)
     this.onMouseLeave = this.onMouseLeave.bind(this)
+
+    this.hoveredCells = []
   }
   
   showHideToggle() {
@@ -43,54 +46,62 @@ class Row extends Component {
     this.props.onDragStart(this.props.idMap)
   }
 
-  onMouseEnter(e) {
+  onMouseEnter(e, dataIndex) {
     this.props.onMouseEnter(e, this.props.idMap)
+    if (!this.hoveredCells.includes(dataIndex))
+      this.hoveredCells.push(dataIndex)
+
     this.setState({ hovering: true })
   }
 
-  onMouseLeave(e) {
-    this.setState({ hovering: false })
+  onMouseLeave(e, dataIndex) {
+    if (this.hoveredCells.includes(dataIndex)) {
+      let idx = this.hoveredCells.indexOf(dataIndex)
+      this.hoveredCells.splice(idx, 1)
+      if (this.hoveredCells.length === 0) {
+        this.setState({ hovering: false })
+      }
+    }
   }
 
   render() {
-    let classes = `t-row${
+    let cellClasses =
       this.props.dragSource
       ? this.props.dragSource.idMap === this.props.idMap 
-        ? ' t-dragging'
-        : ''
+        ? ' t-dragging' : ''
       : this.props.settings.dragEnabled
-        ? ' t-draggable'
-        : ''
-    }`
-    let style = this.state.hovering ? this.props.settings.hoverColors : this.props.colorStyle
+        ? ' t-draggable' : ''
 
+    let style = this.state.hovering ? this.props.settings.hoverColors : this.props.colorStyle
+    
     return (
-      <div ref='self' id={this.props.idMap} className={classes} draggable={this.props.settings.dragEnabled} style={style}
-        onDragStart={this.onDragStart}
-        onMouseEnter={this.onMouseEnter}
-        onMouseLeave={this.onMouseLeave}
-      >
+      <React.Fragment>
         {this.props.data.children
           ? this.state.hideChildren
-            ? <div className='t-expand-button t-cell' onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
-            : <div className='t-expand-button t-cell' onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
-          : <div className='t-cell t-expand-space'/>
+            ? <div className='t-expand-button t-cell' style={style} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
+            : <div className='t-expand-button t-cell' style={style} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
+          : <div className='t-cell t-expand-space' style={style}/>
         }
         {this.props.columns.map((col, idx) => {
           let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined
           return <Cell key={idx}
                       primary={idx === 0}
-                      column={col}
                       tier={this.props.tier}
                       data={this.props.data[col.dataIndex]}
-                      setIsEditingCell={this.props.setIsEditingCell}
+                      column={col}
+                      style={style}
+                      classes={cellClasses}
                       overrideProps={cellOverrideProps}
                       onCellInput={this.onCellInput}
-                      fixedWidthsStr={this.props.fixedWidthsStr}
+                      onDragStart={this.onDragStart}
+                      onMouseEnter={this.onMouseEnter}
+                      onMouseLeave={this.onMouseLeave}
+                      onResize={this.props.onColumnResize}
+                      setIsEditingCell={this.props.setIsEditingCell}
                   />
         }
         )}
-      </div>
+      </React.Fragment>
     )
   }
 }
@@ -99,8 +110,8 @@ Row.propTypes = {
   data: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   id: PropTypes.any.isRequired,
-  tier: PropTypes.number.isRequired,
   idMap: PropTypes.string.isRequired,
+  tier: PropTypes.number.isRequired,
   setIsEditingCell: PropTypes.func.isRequired,
   isEditingCell: PropTypes.bool.isRequired,
   onCellInput: PropTypes.func,
@@ -109,7 +120,7 @@ Row.propTypes = {
   handleHideChildren: PropTypes.func,
   onDragStart: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
-  fixedWidthsStr: PropTypes.string.isRequired,
+  onColumnResize: PropTypes.func,
 }
 
 Row.defaultProps = {

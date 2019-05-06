@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import './Table.css'
 import Header from './Header'
 import Body from './Body'
-import ResizeDetector from 'react-resize-detector'
 
 import { addTable, delTable } from './redux/actions'
 
@@ -27,12 +26,13 @@ class Table extends Component {
       },
       columnSorts: [],
       columns: props.columns,
+      columnWidths: {},
       columnTotalFixedWidths: {},
     }
 
     this.makeStateColumns = this.makeStateColumns.bind(this)
     this.handleHeadClick = this.handleHeadClick.bind(this)
-    this.handleResize = this.handleResize.bind(this)
+    this.handleColumnResize = this.handleColumnResize.bind(this)
   }
 
   makeStateColumns(propColumns) {
@@ -106,23 +106,20 @@ class Table extends Component {
     }
   }
 
-  handleResize() {
-    console.log('Table resized!!')
+  handleColumnResize(dataIndex, width) {
+    this.setState({ columnWidths: { ...this.state.columnWidths, [dataIndex]: width } })
   }
 
   render() {
-    console.log(this.state.settings.tableWidth)
     let style = { width: this.props.settings.tableWidth }
-    let fixedWidthsStr = Object.entries(this.state.columnTotalFixedWidths).reduce((str, [unit, value]) => value > 0 && unit !== '%' ? `${str} - ${value}${unit}` : str, '')
     
-    console.log(this.state.columns)
     return (
         <div ref='table' className='t-table' style={style}>
           <Header columns={this.state.columns}
                   columnSorts={this.state.columnSorts}
                   settings={this.state.settings}
                   onHeadClick={this.handleHeadClick}
-                  fixedWidthsStr={fixedWidthsStr}
+                  columnWidths={this.state.columnWidths}
           />
           <Body columns={this.state.columns}
                 data={this.props.data}
@@ -131,9 +128,8 @@ class Table extends Component {
                 tableId={this.props.tableId}
                 settings={this.state.settings}
                 columnSorts={this.state.columnSorts}
-                fixedWidthsStr={fixedWidthsStr}
+                onColumnResize={this.handleColumnResize}
           />
-          <ResizeDetector handleWidth handleHeight onResize={this.handleResize} />
         </div>
     )
   }

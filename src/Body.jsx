@@ -14,6 +14,7 @@ class Body extends PureComponent {
     this.handleShowHideToggle = this.handleShowHideToggle.bind(this)
     this.handleDragStart = this.handleDragStart.bind(this)
     this.handleMouseEnter = this.handleMouseEnter.bind(this)
+    this.onWheel = this.onWheel.bind(this)
 
     let flatData = this.flattenData(this.props.data)
     this.state = {
@@ -191,21 +192,24 @@ class Body extends PureComponent {
     }
   }
 
+  onWheel(e) {
+    console.log(e)
+  }
+
   render() {
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
     return (             
-      <div ref='body' className={classes} onScroll={this.handleScroll} >
-        <div key={-1} id='start' style={{minHeight: this.state.scrollBuffer.top}}/>
-        {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }) => {
+      <div ref='body' className={classes} onScroll={this.handleScroll} onWheel={this.onWheel} style={{ '--column-count': this.props.columns.length }}>
+        <div key={-1} className='t-body-buffer' style={{minHeight: this.state.scrollBuffer.top}}/>
+        {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }, index) => {
           let colorStyle = this.props.settings.tierColors[info.tier % this.props.settings.tierColors.length]
           return <Row key={info.idMap}
             id={data.id}
             idMap={info.idMap}
+            tier={info.tier}
             data={data}
             columns={this.props.columns}
-            fixedWidthsStr={this.props.fixedWidthsStr}
-            tier={info.tier}
-            scrollbarYIsVisible={this.props.scrollbarYIsvisible}
+            onColumnResize={index === 0 ? this.props.onColumnResize : undefined}
             settings={this.props.settings}
             colorStyle={colorStyle}
             onCellInput={this.props.onCellInput}
@@ -214,7 +218,7 @@ class Body extends PureComponent {
             onMouseEnter={this.handleMouseEnter}
           />
         })}
-        <div key={Infinity} id='end' style={{minHeight: this.state.scrollBuffer.bottom}}/>
+        <div key={Infinity} className='t-body-buffer' style={{minHeight: this.state.scrollBuffer.bottom}}/>
       </div>
     )
   }
@@ -227,7 +231,7 @@ Body.propTypes = {
   rowHeight: PropTypes.number.isRequired,
   settings: PropTypes.object.isRequired,
   columnSorts: PropTypes.array.isRequired,
-  fixedWidthsStr: PropTypes.string.isRequired,
+  onColumnResize: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
