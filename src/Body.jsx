@@ -156,7 +156,7 @@ class Body extends PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
       let flatData = this.flattenData(this.props.data)
-      this.setState({ flatData, orderedData: [...flatData] }, this.calcWindowRange())
+      this.setState({ flatData, orderedData: [...flatData] }, this.calcWindowRange)
     } else if (prevProps.columnSorts !== this.props.columnSorts) {
       let data = [...this.props.data]
       for (let sortedColumn of this.props.columnSorts) {
