@@ -20,7 +20,6 @@ class Head extends Component {
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'
     }
 
-    console.log(style)
     return (
       <div ref='head' className='t-head' style={style} onClick={this.onClick} style={style}>
         <b>{this.props.column.name}</b>

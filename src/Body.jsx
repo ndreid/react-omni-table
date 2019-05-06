@@ -157,8 +157,7 @@ class Body extends PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
       let flatData = this.flattenData(this.props.data)
-      this.setState({ flatData, orderedData: [...flatData] })
-      this.calcWindowRange()
+      this.setState({ flatData, orderedData: [...flatData] }, this.calcWindowRange())
     } else if (prevProps.columnSorts !== this.props.columnSorts) {
       let data = [...this.props.data]
       for (let sortedColumn of this.props.columnSorts) {
@@ -166,7 +165,6 @@ class Body extends PureComponent {
         data.sort((dataA, dataB) => {
           let aVal = dataA[sortedColumn.name], bVal = dataB[sortedColumn.name]
           let a, b
-          let r = 0
           switch (dataType) {
             case DataTypes.Date:
               let aDate = new Date(aVal), bDate = new Date(bVal)
@@ -192,14 +190,10 @@ class Body extends PureComponent {
     }
   }
 
-  onWheel(e) {
-    console.log(e)
-  }
-
   render() {
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
     return (             
-      <div ref='body' className={classes} onScroll={this.handleScroll} onWheel={this.onWheel} style={{ '--column-count': this.props.columns.length }}>
+      <div ref='body' className={classes} onScroll={this.handleScroll} style={{ '--column-count': this.props.columns.length }}>
         <div key={-1} className='t-body-buffer' style={{minHeight: this.state.scrollBuffer.top}}/>
         {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }, index) => {
           let colorStyle = this.props.settings.tierColors[info.tier % this.props.settings.tierColors.length]
