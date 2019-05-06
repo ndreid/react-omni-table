@@ -14,7 +14,6 @@ class Body extends PureComponent {
     this.handleShowHideToggle = this.handleShowHideToggle.bind(this)
     this.handleDragStart = this.handleDragStart.bind(this)
     this.handleMouseEnter = this.handleMouseEnter.bind(this)
-    this.onWheel = this.onWheel.bind(this)
 
     let flatData = this.flattenData(this.props.data)
     this.state = {
