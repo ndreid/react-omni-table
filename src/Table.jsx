@@ -25,50 +25,12 @@ class Table extends Component {
         ...props.settings,
       },
       columnSorts: [],
-      columns: props.columns,
-      columnWidths: {},
-      columnTotalFixedWidths: {},
     }
 
-    this.makeStateColumns = this.makeStateColumns.bind(this)
     this.handleHeadClick = this.handleHeadClick.bind(this)
     this.handleColumnResize = this.handleColumnResize.bind(this)
-  }
 
-  makeStateColumns(propColumns) {
-    let tableWidth = this.refs.table.clientWidth
-    let columns = JSON.parse(JSON.stringify(propColumns))
-    let columnTotalFixedWidths = {
-      cm: 0, mm: 0, in: 0, px: 0, pt: 0,
-      pc: 0, em: 0, ex: 0, ch: 0, rem: 0,
-      vw: 0, vh: 0, vmin: 0, vmax: 0
-    }
-    let totalPct = 0
-    let columnsWithoutWidth = columns.reduce((cnt, col) => cnt + ((!col.style || col.style.width === undefined) ? 1 : 0), 0)
-    for (let col of columns) {
-      if (col.style && col.style.width && typeof col.style.width.replace === 'function') {
-        let splitIdx = col.style.width.replace(/\d/g, '|').lastIndexOf('|') + 1
-        if (splitIdx > 0) {
-          let value = col.style.width.substring(0, splitIdx)
-          let unit = col.style.width.substring(splitIdx)
-          if (isNaN(value))
-            continue
-          if (unit === '%')
-            totalPct += Number(value)
-          else if (columnTotalFixedWidths.hasOwnProperty(unit))
-            columnTotalFixedWidths[unit] += Number(value)
-        } 
-      }
-    }
-
-    for (let col of columns) {
-      if (!col.style)
-        col.style = {}
-      if (!col.style.width)
-        col.style.width = `${(100 - totalPct) / columnsWithoutWidth}%`
-    }
-
-    this.setState({ columns, columnTotalFixedWidths })
+    this.columnRefs = props.columns.reduce((refs, col) => { refs[col.dataIndex] = React.createRef(); return refs },{})
   }
 
   handleHeadClick(columnName) {
@@ -89,7 +51,6 @@ class Table extends Component {
   }
 
   componentDidMount() {
-    this.makeStateColumns(this.props.columns)
     this.props.addTable(this.props.tableId)
   }
 
@@ -102,26 +63,30 @@ class Table extends Component {
       this.setState({ settings: { ...defaultSettings, ...this.props.settings } })
     }
     if (prevProps.columns != this.props.columns) {
-      this.makeStateColumns(this.props.columns)
+      this.columnRefs = this.props.columns.reduce((refs, col) => { refs[col.dataIndex] = React.createRef(); return refs },{})
     }
   }
 
   handleColumnResize(dataIndex, width) {
-    this.setState({ columnWidths: { ...this.state.columnWidths, [dataIndex]: width } })
+    if (this.columnRefs[dataIndex] && this.columnRefs[dataIndex].current) {
+      this.columnRefs[dataIndex].current.refs.head.style.width = width
+    }
   }
 
   render() {
     let style = { width: this.props.settings.tableWidth }
     
+    console.log(this.columnRefs)
+    
     return (
         <div ref='table' className='t-table' style={style}>
-          <Header columns={this.state.columns}
+          <Header columns={this.props.columns}
                   columnSorts={this.state.columnSorts}
                   settings={this.state.settings}
                   onHeadClick={this.handleHeadClick}
-                  columnWidths={this.state.columnWidths}
+                  columnRefs={this.columnRefs}
           />
-          <Body columns={this.state.columns}
+          <Body columns={this.props.columns}
                 data={this.props.data}
                 onCellInput={this.props.onCellInput}
                 rowHeight={this.props.rowHeight}

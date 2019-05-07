@@ -16,7 +16,6 @@ class Header extends Component {
       this.props.columns !== nextProps.columns
       || this.props.columnSorts !== nextProps.columnSorts
       || this.props.scrollbarYIsVisible !== nextProps.scrollbarYIsVisible
-      || this.props.columnWidths !== nextProps.columnWidths
     )
   }
 
@@ -26,12 +25,11 @@ class Header extends Component {
         <div className='t-header'>
           <div className='t-expand-button t-head'></div>
           {this.props.columns.map((col, idx) => 
-            <Head key={idx}
+            <Head ref={this.props.columnRefs[col.dataIndex]} key={idx}
               colNum={idx}
               column={col}
               onClick={this.props.onHeadClick}
               columnSort={this.props.columnSorts.find(sc => sc.name === col.dataIndex)}
-              width={this.props.columnWidths[col.dataIndex]}
             />
           )}
           {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
@@ -45,7 +43,6 @@ Header.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   scrollLeft: PropTypes.number,
   columnSorts: PropTypes.array.isRequired,
-  columnWidths: PropTypes.object.isRequired,
   onHeadClick: PropTypes.func.isRequired,
 }
 

@@ -15,7 +15,6 @@ class Head extends Component {
   render() {
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
-      width: this.props.width,
       minWidth: this.props.column.style ? this.props.column.style.minWidth : undefined,
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start'
     }
