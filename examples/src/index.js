@@ -21,6 +21,22 @@ const columns = [
     name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
     style: { minWidth: '4rem',  align: 'center' },
   },
+  { name: 'Column', dataIndex: 'col5', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col6', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col7', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col8', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col9', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col10', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col11', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col12', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col13', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col14', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col15', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col16', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col17', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col18', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col19', dataType: 'string' },
+  { name: 'Column', dataIndex: 'col20', dataType: 'string' },
 ]
 
 // const columns = [
@@ -247,9 +263,35 @@ const settings = {
   // headerColors: { color: 'white', backgroundColor: 'darkblue' , borderColor: 'black' }
 }
 
-const App = () => (
-  <DragDropArea>
-    <Table tableId='exampleTable' columns={columns} data={data} rowHeight={25} settings={settings}/>
+const App = () => {
+  let tableData = []
+  for (let i = 1; i < 10000; i++) {
+    tableData.push({
+      id: i,
+      name: 'My Name',
+      birthday: '1/1/2019',
+      age: 0,
+      homeOwner: false,
+      col5: 'owijef',
+      col6: 'owijef',
+      col7: 'owijef',
+      col8: 'owijef',
+      col9: 'owijef',
+      col10: 'owijef' + (i % 100 === 0 ? 'oiwjefoijweofijweofijwoefijwoeifjwoeijf' : ''),
+      col11: 'owijef',
+      col12: 'owijef',
+      col13: 'owijef',
+      col14: 'owijef',
+      col15: 'owijef',
+      col16: 'owijef',
+      col17: 'owijef',
+      col18: 'owijef',
+      col19: 'owijef',
+      col20: 'owijef',
+    })
+  }
+  return <DragDropArea>
+    <Table tableId='exampleTable' columns={columns} data={tableData} rowHeight={25} settings={settings}/>
   </DragDropArea>
-);
+};
 render(<App />, document.getElementById("root"));

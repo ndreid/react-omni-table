@@ -190,6 +190,7 @@ class Body extends PureComponent {
   }
 
   render() {
+    console.log('Body.jsx')
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
     return (             
       <div ref='body' className={classes} onScroll={this.handleScroll} style={{ '--column-count': this.props.columns.length }}>
