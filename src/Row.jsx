@@ -78,9 +78,9 @@ class Row extends Component {
       <React.Fragment>
         {this.props.data.children
           ? this.state.hideChildren
-            ? <div className='t-expand-button t-cell' style={style} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
-            : <div className='t-expand-button t-cell' style={style} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
-          : <div className='t-cell t-expand-space' style={style}/>
+            ? <div className={'t-expand-button t-cell' + cellClasses} style={style} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
+            : <div className={'t-expand-button t-cell' + cellClasses} style={style} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
+          : <div className={'t-cell t-expand-space' + cellClasses} style={style}/>
         }
         {this.props.columns.map((col, idx) => {
           let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined

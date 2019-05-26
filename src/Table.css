@@ -58,10 +58,9 @@
 .t-body-buffer { grid-column: 1 / -1 }
 
 .t-cell.t-dragging {
-  /* box-shadow: 0px 0px 10px 1px grey; */
-  /* box-shadow: 0 -5px 5px -5px #333; */
   background-color: #efefef;
-  -webkit-border-image: -webkit-gradient(linear, left top, left bottom, from(#00abeb), to(#fff), color-stop(0.5, #fff), color-stop(0.5, #66cc00)) 21 30 30 21 repeat repeat;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 /* .t-cell.t-dragging:before {
@@ -92,6 +91,7 @@
   white-space: nowrap;
   padding: 0px 8px;
   border-bottom: solid rgb(167, 167, 167) 1px;
+  /* box-shadow: 0 -5px 5px -5px #333; */
 }
 
 .t-expand-button, .t-expand-space {
