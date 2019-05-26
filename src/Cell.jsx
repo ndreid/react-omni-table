@@ -112,6 +112,11 @@ class Cell extends PureComponent {
     this.props.onResize(this.props.column.dataIndex, this.refs.cell.clientWidth)
   }
 
+  componentDidMount() {
+    if (this.props.onResize)
+      this.onResize()
+  }
+
   componentDidUpdate() {
     if (this.state.dataType !== (this.props.overrideProps.dataType || this.props.column.dataType || DataTypes.String)
       || this.state.editable !== coalesce(this.props.overrideProps.editable, this.props.column.editable, false)

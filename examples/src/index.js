@@ -21,22 +21,22 @@ const columns = [
     name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
     style: { minWidth: '4rem',  align: 'center' },
   },
-  { name: 'Column', dataIndex: 'col5', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col6', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col7', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col8', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col9', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col10', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col11', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col12', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col13', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col14', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col15', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col16', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col17', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col18', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col19', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col20', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col5', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col6', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col7', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col8', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col9', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col10', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col11', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col12', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col13', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col14', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col15', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col16', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col17', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col18', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col19', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col20', dataType: 'string' },
 ]
 
 // const columns = [
@@ -262,6 +262,8 @@ const settings = {
   // tierColors: [{ color: 'white', backgroundColor: 'darkblue', borderColor: 'black' }],
   // headerColors: { color: 'white', backgroundColor: 'darkblue' , borderColor: 'black' }
 }
+
+let passData = false
 
 const App = () => {
   let tableData = []
