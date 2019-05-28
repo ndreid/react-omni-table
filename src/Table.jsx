@@ -69,7 +69,7 @@ class Table extends Component {
 
   handleColumnResize(dataIndex, width) {
     if (this.columnRefs[dataIndex] && this.columnRefs[dataIndex].current) {
-      this.columnRefs[dataIndex].current.refs.head.style.width = width
+      this.columnRefs[dataIndex].current.refs.head.style.width = `${width}px`
     }
   }
 
