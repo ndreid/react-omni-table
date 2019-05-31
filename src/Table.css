@@ -29,7 +29,6 @@
 
 .t-header {
   display: flex;
-  /* min-height: 40px; */
   min-width: -webkit-min-content;
   min-width: min-content;
   min-height: -webkit-min-content;
@@ -38,6 +37,7 @@
 }
 
 .t-head {
+  flex: 0 0 none;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -48,56 +48,48 @@
 
 .t-body {
   /* max-width: 100%; */
-  display: grid;
-  grid-template-columns: 25px repeat(var(--column-count), 1fr);
+  display: flex;
+  flex-direction: column;
   overflow: auto;
 }
 
 .t-body.t-dragging { cursor: grabbing !important }
 
-.t-body-buffer { grid-column: 1 / -1 }
 
-.t-cell.t-dragging {
-  background-color: #efefef;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+.t-row {
+  display: flex;
+  min-height: 1.5rem;
+  border-bottom: 1px solid rgb(167, 167, 167);
+  min-width: fit-content;
+}
+.t-row:hover {
+  color: var(--hover-color);
+  background-color: var(--hover-background);
 }
 
-/* .t-cell.t-dragging:before {
-  content: "";
-  position: fixed;
-  top: -10px;
-  left: 0;
-  width: 100%;
-  height: 10px;
-
-  -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
-  -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
-  box-shadow: 0px 0px 10px rgba(0,0,0,.8);
-
-  z-index: 100;
-} */
+.t-row.t-dragging {
+  /* background-color: #efefef; */
+  box-shadow: 0 0 7px 0 #333;
+}
 
 .t-draggable {
   cursor: grab;
 }
 
 .t-cell {
+  flex: 0 0 none;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  min-height: 25px;
   user-select: none;
   white-space: nowrap;
   padding: 0px 8px;
-  border-bottom: solid rgb(167, 167, 167) 1px;
-  /* box-shadow: 0 -5px 5px -5px #333; */
 }
 
 .t-expand-button, .t-expand-space {
-  width: 25px;
   min-width: 25px;
   max-width: 25px;
+  padding: 0px;
 }
 
 .t-expand-button {

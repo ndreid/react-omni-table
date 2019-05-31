@@ -1,6 +1,6 @@
 {
   "name": "react-omni-table",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "React Table Components",
   "main": "dist/index.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
+    "css-unit-translator": "^1.0.1",
     "moment": "^2.24.0",
     "react-redux": "^7.0.2",
     "react-resize-detector": "^4.1.3",

@@ -46,41 +46,33 @@ class Row extends Component {
     this.props.onDragStart(this.props.idMap)
   }
 
-  onMouseEnter(e, dataIndex) {
+  onMouseEnter(e) {
     this.props.onMouseEnter(e, this.props.idMap)
-    if (!this.hoveredCells.includes(dataIndex))
-      this.hoveredCells.push(dataIndex)
-
     this.setState({ hovering: true })
   }
 
-  onMouseLeave(e, dataIndex) {
-    if (this.hoveredCells.includes(dataIndex)) {
-      let idx = this.hoveredCells.indexOf(dataIndex)
-      this.hoveredCells.splice(idx, 1)
-      if (this.hoveredCells.length === 0) {
-        this.setState({ hovering: false })
-      }
-    }
+  onMouseLeave(e) {
+    this.setState({ hovering: false })
   }
 
   render() {
-    let cellClasses =
+    let dragClass =
       this.props.dragSource
       ? this.props.dragSource.idMap === this.props.idMap 
         ? ' t-dragging' : ''
       : this.props.settings.dragEnabled
         ? ' t-draggable' : ''
 
-    let style = this.state.hovering ? this.props.settings.hoverColors : this.props.colorStyle
-    
+    let colorStyle = this.state.hovering
+      ? this.props.settings.hoverColors
+      : this.props.settings.tierColors[this.props.tier % this.props.settings.tierColors.length]
     return (
-      <React.Fragment>
+      <div className={`t-row${dragClass}`} style={colorStyle} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} draggable>
         {this.props.data.children
           ? this.state.hideChildren
-            ? <div className={'t-expand-button t-cell' + cellClasses} style={style} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
-            : <div className={'t-expand-button t-cell' + cellClasses} style={style} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
-          : <div className={'t-cell t-expand-space' + cellClasses} style={style}/>
+            ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={colorStyle.color}/></div>
+            : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={colorStyle.color}/></div>
+          : <div className={'t-cell t-expand-space'}/>
         }
         {this.props.columns.map((col, idx) => {
           let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined
@@ -89,19 +81,14 @@ class Row extends Component {
                       tier={this.props.tier}
                       data={this.props.data[col.dataIndex]}
                       column={col}
-                      style={style}
-                      classes={cellClasses}
+                      columnWidth={this.props.columnWidths[col.dataIndex]}
                       overrideProps={cellOverrideProps}
                       onCellInput={this.onCellInput}
-                      onDragStart={this.onDragStart}
-                      onMouseEnter={this.onMouseEnter}
-                      onMouseLeave={this.onMouseLeave}
-                      onResize={this.props.onColumnResize}
                       setIsEditingCell={this.props.setIsEditingCell}
                   />
         }
         )}
-      </React.Fragment>
+      </div>
     )
   }
 }
@@ -109,6 +96,7 @@ class Row extends Component {
 Row.propTypes = {
   data: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columnWidths: PropTypes.object.isRequired,
   id: PropTypes.any.isRequired,
   idMap: PropTypes.string.isRequired,
   tier: PropTypes.number.isRequired,
@@ -116,15 +104,10 @@ Row.propTypes = {
   isEditingCell: PropTypes.bool.isRequired,
   onCellInput: PropTypes.func,
   settings: PropTypes.object.isRequired,
-  colorStyle: PropTypes.object.isRequired,
   handleHideChildren: PropTypes.func,
   onDragStart: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
   onColumnResize: PropTypes.func,
-}
-
-Row.defaultProps = {
-  colorStyle: {}
 }
 
 const mapStateToProps = state => ({

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import DataTypes from './DataTypes'
 import { isNumber, numFunc, coalesce } from './extensions'
-import ResizeDetector from 'react-resize-detector'
 
 class Cell extends PureComponent {
   constructor(props) {
@@ -18,9 +17,6 @@ class Cell extends PureComponent {
     this.handleDoubleClick = this.handleDoubleClick.bind(this)
     this.handleKeyUp = this.handleKeyUp.bind(this)
     this.handleInput = this.handleInput.bind(this)
-    this.onMouseEnter = this.onMouseEnter.bind(this)
-    this.onMouseLeave = this.onMouseLeave.bind(this)
-    this.onResize = this.onResize.bind(this)
   }
 
   getFormattedData() {
@@ -100,23 +96,6 @@ class Cell extends PureComponent {
     }
   }
 
-  onMouseEnter(e) {
-    this.props.onMouseEnter(e, this.props.column.dataIndex)
-  }
-
-  onMouseLeave(e) {
-    this.props.onMouseLeave(e, this.props.column.dataIndex)
-  }
-
-  onResize() {
-    this.props.onResize(this.props.column.dataIndex, this.refs.cell.clientWidth)
-  }
-
-  componentDidMount() {
-    if (this.props.onResize)
-      this.onResize()
-  }
-
   componentDidUpdate() {
     if (this.state.dataType !== (this.props.overrideProps.dataType || this.props.column.dataType || DataTypes.String)
       || this.state.editable !== coalesce(this.props.overrideProps.editable, this.props.column.editable, false)
@@ -131,35 +110,22 @@ class Cell extends PureComponent {
   render() {
     const align = this.props.column.style ? this.props.column.style.align : undefined
     const style = {
-      ...this.props.style,
-      minWidth: this.props.column.style ? this.props.column.style.minWidth : undefined,
+      width: this.props.columnWidth,
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
       paddingLeft: 8 + (this.props.primary ? this.props.tier * 8 : 0),
     }
 
     return this.state.dataType === DataTypes.Bool
-      ? <div ref={this.props.onResize ? 'cell' : undefined} className={`t-cell${this.props.classes}`} style={style} draggable={!!this.props.classes}
-          onDragStart={this.props.onDragStart}
-          onMouseEnter={this.onMouseEnter}
-          onMouseLeave={this.onMouseLeave}
-        >
+      ? <div ref={this.props.onResize ? 'cell' : undefined} className='t-cell' style={style}>
           <input type='checkbox' checked={this.props.data} onChange={this.handleInput}/>
-          {this.props.onResize ? <ResizeDetector handleWidth handleHeight onResize={this.onResize} /> : undefined }
         </div>
       : this.state.editMode
-        ? <input ref={this.props.onResize ? 'cell' : undefined} defaultValue={this.props.data} onFocus={this.handleFocus} className='t-cell' style={style} onBlur={this.handleInput} autoFocus onKeyUp={this.handleKeyUp}>
-            {this.props.onResize ? <ResizeDetector handleWidth handleHeight onResize={this.onResize} /> : undefined }
-          </input>
+        ? <input ref={this.props.onResize ? 'cell' : undefined} defaultValue={this.props.data} onFocus={this.handleFocus} className='t-cell' style={style} onBlur={this.handleInput} autoFocus onKeyUp={this.handleKeyUp}></input>
         : (
-          <div ref={this.props.onResize ? 'cell' : undefined} className={`t-cell${this.props.classes}`} style={style} draggable={!!this.props.classes}
+          <div ref={this.props.onResize ? 'cell' : undefined} className='t-cell' style={style}
                onDoubleClick={this.handleDoubleClick}
-               onDragStart={this.props.onDragStart}
-               onMouseEnter={this.onMouseEnter}
-               onMouseLeave={this.onMouseLeave}
           >
             {this.getFormattedData()}
-            {this.props.onResize ? <ResizeDetector handleWidth handleHeight onResize={this.onResize} /> : undefined }
-            
           </div>
       )
   }
@@ -170,14 +136,9 @@ Cell.propTypes = {
   tier: PropTypes.number.isRequired,
   data: PropTypes.any,
   column: PropTypes.object.isRequired,
-  style: PropTypes.object.isRequired,
-  classes: PropTypes.string.isRequired,
+  columnWidth: PropTypes.number.isRequired,
   onCellInput: PropTypes.func.isRequired,
   overrideProps: PropTypes.object,
-  onDragStart: PropTypes.func.isRequired,
-  onMouseEnter: PropTypes.func.isRequired,
-  onMouseLeave: PropTypes.func.isRequired,
-  onResize: PropTypes.func,
 }
 
 Cell.defaultProps = {

@@ -94,7 +94,7 @@ class Body extends PureComponent {
 
   get expandedRows() {
     let expandedRows = []
-    for (let data of this.state.orderedData) { //this.state.rows) {
+    for (let data of this.state.orderedData) {
       if (!this.state.collapsedIdMaps.some(collapsedIdMap => data.info.idMap.startsWith(`${collapsedIdMap}-`))) {
         expandedRows.push(data)
       }
@@ -190,22 +190,26 @@ class Body extends PureComponent {
   }
 
   render() {
-    console.log('Body.jsx')
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
+
+    let style = {
+      '--hover-color': this.props.settings.hoverColors.color,
+      '--hover-background': this.props.settings.hoverColors.backgroundColor,
+    }
+
     return (             
-      <div ref='body' className={classes} onScroll={this.handleScroll} style={{ '--column-count': this.props.columns.length }}>
+      <div ref='body' className={classes} onScroll={this.handleScroll} style={style}>
         <div key={-1} className='t-body-buffer' style={{minHeight: this.state.scrollBuffer.top}}/>
         {this.expandedRows.slice(this.state.windowRange.start, this.state.windowRange.stop + 1).map(({ data, info }, index) => {
-          let colorStyle = this.props.settings.tierColors[info.tier % this.props.settings.tierColors.length]
           return <Row key={info.idMap}
             id={data.id}
             idMap={info.idMap}
             tier={info.tier}
             data={data}
             columns={this.props.columns}
+            columnWidths={this.props.columnWidths}
             onColumnResize={index === 0 ? this.props.onColumnResize : undefined}
             settings={this.props.settings}
-            colorStyle={colorStyle}
             onCellInput={this.props.onCellInput}
             handleShowHideToggle={this.handleShowHideToggle}
             onDragStart={this.handleDragStart}
@@ -225,7 +229,7 @@ Body.propTypes = {
   rowHeight: PropTypes.number.isRequired,
   settings: PropTypes.object.isRequired,
   columnSorts: PropTypes.array.isRequired,
-  onColumnResize: PropTypes.func.isRequired,
+  columnWidths: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({

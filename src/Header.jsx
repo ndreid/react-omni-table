@@ -15,6 +15,7 @@ class Header extends Component {
     return (
       this.props.columns !== nextProps.columns
       || this.props.columnSorts !== nextProps.columnSorts
+      || this.props.columnWidths !== nextProps.columnWidths
       || this.props.scrollbarYIsVisible !== nextProps.scrollbarYIsVisible
     )
   }
@@ -28,8 +29,9 @@ class Header extends Component {
             <Head ref={this.props.columnRefs[col.dataIndex]} key={idx}
               colNum={idx}
               column={col}
-              onClick={this.props.onHeadClick}
+              columnWidth={this.props.columnWidths[col.dataIndex]}
               columnSort={this.props.columnSorts.find(sc => sc.name === col.dataIndex)}
+              onClick={this.props.onHeadClick}
             />
           )}
           {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
@@ -44,6 +46,8 @@ Header.propTypes = {
   scrollLeft: PropTypes.number,
   columnSorts: PropTypes.array.isRequired,
   onHeadClick: PropTypes.func.isRequired,
+  columnRefs: PropTypes.object.isRequired,
+  columnWidths: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
