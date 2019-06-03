@@ -44,7 +44,7 @@ class DragDropContext extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className='t-ddc' onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseLeave}>
+        <div className='t-ddc' onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseLeave} style={{ width: this.props.width}}>
           {this.props.children}
         </div>
       </React.Fragment>
@@ -54,6 +54,7 @@ class DragDropContext extends Component {
 
 DragDropContext.propTypes = {
   onDrop: PropTypes.func,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 }
 
 const mapStateToProps = state => ({

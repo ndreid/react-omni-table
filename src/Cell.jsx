@@ -112,7 +112,7 @@ class Cell extends PureComponent {
     const style = {
       width: this.props.columnWidth,
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
-      paddingLeft: 8 + (this.props.primary ? this.props.tier * 8 : 0),
+      paddingLeft: `${0.5 + (this.props.primary ? this.props.tier * 0.5 : 0)}em`,
     }
 
     return this.state.dataType === DataTypes.Bool

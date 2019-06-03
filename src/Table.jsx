@@ -17,7 +17,7 @@ class Table extends Component {
     document.body.appendChild(canvas)
     let { fontSize, fontFamily } = window.getComputedStyle(canvas)
     document.body.removeChild(canvas)
-    let defaultSettings = {
+    let settings = {
       headerColors: { color: 'white', backgroundColor: '#707070' },
       tierColors: [
         { color: 'black', backgroundColor: '#dedede' },
@@ -27,19 +27,20 @@ class Table extends Component {
       dragEnabled: false,
       fontFamily: fontFamily.replace(new RegExp('"', 'g'), ''),
       fontSize,
+      // tableWidth: '100%',
+      ...props.settings
     }
+
+    
+    this.cssUnitTranslator = new CSSUnitTranslator(settings.fontSize, settings.fontFamily)
 
     this.state = {
-      settings: {
-        ...defaultSettings,
-        ...props.settings,
-      },
+      settings,
       columnSorts: [],
       columnWidths: {},
+      rowHeight: this.cssUnitTranslator.translate(props.rowHeight, 'px', 0),
       mounted: false
     }
-
-    this.cssUnitTranslator = new CSSUnitTranslator(this.state.settings.fontSize, this.state.settings.fontFamily)
     
     let columnWidths = this.getColumnWidths_r(props.data)
     this.state.columnWidths = columnWidths
@@ -52,7 +53,6 @@ class Table extends Component {
 
   get columnWidths() {
     let widths = {}
-    let regex = new RegExp('[a-zA-Z%]', 'g')
 
     let context = document.createElement('canvas').getContext('2d')
     context.font = 'bold ' + this.state.settings.fontSize + ' ' + this.state.settings.fontFamily
@@ -60,19 +60,13 @@ class Table extends Component {
     for (let col of this.props.columns) {
       let settingsWidth, contentWidth, titleWidth
       if (col.style && col.style.minWidth) {
-        if (isNaN(col.style.minWidth)) {
-          let idx = col.style.minWidth.search(regex)
-          let settingsWidthValue = +col.style.minWidth.slice(0, idx)
-          let settingsWidthUnit = col.style.minWidth.slice(idx)
-
-          settingsWidth = +this.cssUnitTranslator.translate(settingsWidthValue, settingsWidthUnit, 'px', 2).replace('px', '')
-        } else {
-          settingsWidth = +col.style.minWidth
-        }
+        settingsWidth = isNaN(col.style.minWidth)
+          ? +this.cssUnitTranslator.translate(col.style.minWidth, 'px', 2).replace('px', '')
+          : +col.style.minWidth
       }
 
       contentWidth = this.state.columnWidths[col.dataIndex] + 16/*padding*/
-      titleWidth = context.measureText(col.name.split(' ').reduce((a, b) => a.length > b.length ? a : b)).width + 16/*padding*/
+      titleWidth = Math.ceil(context.measureText(col.name.split(' ').reduce((a, b) => a.length > b.length ? a : b)).width + 16/*padding*/)
       widths[col.dataIndex] = {
         actual: Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25),
         extra: Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25) - Math.max(contentWidth || 0, titleWidth || 0, 25)
@@ -124,7 +118,7 @@ class Table extends Component {
         let txt = row[col.dataIndex]
         if (txt === undefined || txt === null)
           continue
-        let width = context.measureText(txt).width
+        let width = Math.ceil(context.measureText(txt).width)
         if (!columnWidths[col.dataIndex] || width > columnWidths[col.dataIndex])
           columnWidths[col.dataIndex] = width
       }
@@ -171,10 +165,13 @@ class Table extends Component {
     if (prevProps.columns != this.props.columns) {
       this.columnRefs = this.props.columns.reduce((refs, col) => { refs[col.dataIndex] = React.createRef(); return refs },{})
     }
+    if (prevProps.rowHeight != this.props.rowHeight) {
+      this.setState({ rowHeight: this.cssUnitTranslator.translate(this.props.rowHeight, 'px', 2) })
+    }
   }
 
   render() {
-    let style = { width: this.props.settings.tableWidth }
+    let style = { width: this.state.settings.tableWidth }
     let columnWidths = this.columnWidths
     return (
         <div ref='table' className='t-table' style={style}>
@@ -214,6 +211,7 @@ Table.propTypes = {
 
 Table.defaultProps = {
   settings: {},
+  rowHeight: '1.5em',
 }
 
 const mapStateToProps = state => ({

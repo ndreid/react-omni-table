@@ -43,7 +43,7 @@
   align-items: center;
   cursor: pointer;
   user-select: none;
-  padding: 0px 8px;
+  padding: 0 0.5em;
 }
 
 .t-body {
@@ -83,7 +83,7 @@
   align-items: center;
   user-select: none;
   white-space: nowrap;
-  padding: 0px 8px;
+  padding: 0 0.5em;
 }
 
 .t-expand-button, .t-expand-space {

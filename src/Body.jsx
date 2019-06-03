@@ -209,6 +209,7 @@ class Body extends PureComponent {
             columns={this.props.columns}
             columnWidths={this.props.columnWidths}
             onColumnResize={index === 0 ? this.props.onColumnResize : undefined}
+            rowHeight={this.props.rowHeight}
             settings={this.props.settings}
             onCellInput={this.props.onCellInput}
             handleShowHideToggle={this.handleShowHideToggle}

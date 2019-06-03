@@ -10,7 +10,7 @@ import { DragDropContext } from './'
 class DragDropArea extends PureComponent {
   constructor() {
     super()
-
+    
     this.store = createStore(
       reducer
     );
@@ -29,6 +29,7 @@ class DragDropArea extends PureComponent {
 
 DragDropArea.propTypes = {
   onDrop: PropTypes.func,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 }
 
 export default DragDropArea

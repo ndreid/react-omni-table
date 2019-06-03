@@ -63,15 +63,19 @@ class Row extends Component {
       : this.props.settings.dragEnabled
         ? ' t-draggable' : ''
 
-    let colorStyle = this.state.hovering
-      ? this.props.settings.hoverColors
-      : this.props.settings.tierColors[this.props.tier % this.props.settings.tierColors.length]
+    let style = {
+      ...(this.state.hovering
+          ? this.props.settings.hoverColors
+          : this.props.settings.tierColors[this.props.tier % this.props.settings.tierColors.length]
+        ),
+      minHeight: this.props.rowHeight,
+    }
     return (
-      <div className={`t-row${dragClass}`} style={colorStyle} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} draggable>
+      <div className={`t-row${dragClass}`} style={style} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} draggable>
         {this.props.data.children
           ? this.state.hideChildren
-            ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={colorStyle.color}/></div>
-            : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={colorStyle.color}/></div>
+            ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
+            : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
           : <div className={'t-cell t-expand-space'}/>
         }
         {this.props.columns.map((col, idx) => {

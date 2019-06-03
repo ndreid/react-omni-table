@@ -26,17 +26,17 @@ const columns = [
   { name: 'Column', dataIndex: 'col7', dataType: 'string' },
   { name: 'Column', dataIndex: 'col8', dataType: 'string' },
   { name: 'Column', dataIndex: 'col9', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col10', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col11', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col12', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col13', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col14', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col15', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col16', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col17', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col18', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col19', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col20', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col10', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col11', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col12', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col13', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col14', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col15', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col16', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col17', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col18', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col19', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col20', dataType: 'string' },
 ]
 
 // const columns = [
@@ -340,7 +340,7 @@ const App = () => {
       ]
     })
   }
-  return <DragDropArea>
+  return <DragDropArea width='100%'>
     <Table tableId='exampleTable' columns={columns} data={tableData} rowHeight={25} settings={settings}/>
   </DragDropArea>
 };
