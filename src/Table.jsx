@@ -17,7 +17,8 @@ class Table extends Component {
     document.body.appendChild(canvas)
     let { fontSize, fontFamily } = window.getComputedStyle(canvas)
     document.body.removeChild(canvas)
-    let settings = {
+
+    this.defaultSettings = {
       headerColors: { color: 'white', backgroundColor: '#707070' },
       tierColors: [
         { color: 'black', backgroundColor: '#dedede' },
@@ -27,11 +28,14 @@ class Table extends Component {
       dragEnabled: false,
       fontFamily: fontFamily.replace(new RegExp('"', 'g'), ''),
       fontSize,
-      // tableWidth: '100%',
-      ...props.settings
+      tableWidth: '100%',
     }
 
-    
+    let settings = {
+      ...this.defaultSettings,
+      ...props.settings
+    }
+ 
     this.cssUnitTranslator = new CSSUnitTranslator(settings.fontSize, settings.fontFamily)
 
     this.state = {
@@ -171,10 +175,9 @@ class Table extends Component {
   }
 
   render() {
-    let style = { width: this.state.settings.tableWidth }
     let columnWidths = this.columnWidths
     return (
-        <div ref='table' className='t-table' style={style}>
+        <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth }}>
           <Header columns={this.props.columns}
                   columnSorts={this.state.columnSorts}
                   settings={this.state.settings}
