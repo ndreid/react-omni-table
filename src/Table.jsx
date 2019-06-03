@@ -164,7 +164,7 @@ class Table extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.settings != this.props.settings) {
-      this.setState({ settings: { ...defaultSettings, ...this.props.settings } })
+      this.setState({ settings: { ...this.defaultSettings, ...this.props.settings } })
     }
     if (prevProps.columns != this.props.columns) {
       this.columnRefs = this.props.columns.reduce((refs, col) => { refs[col.dataIndex] = React.createRef(); return refs },{})
