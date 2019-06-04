@@ -178,9 +178,8 @@ class Table extends Component {
 
   render() {
     let columnWidths = this.columnWidths
-    console.log('rendered...')
     return (
-        <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth }}>
+        <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth, maxWidth: this.state.settings.tableWidth, minWidth: this.state.settings.tableWidth }}>
           <Header columns={this.props.columns}
                   columnSorts={this.state.columnSorts}
                   settings={this.state.settings}
