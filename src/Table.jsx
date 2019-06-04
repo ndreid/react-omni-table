@@ -6,6 +6,7 @@ import Header from './Header'
 import Body from './Body'
 import CSSUnitTranslator from 'css-unit-translator'
 import ResizeDetector from 'react-resize-detector'
+import { debounce } from 'lodash'
 
 import { addTable, delTable } from './redux/actions'
 
@@ -176,6 +177,7 @@ class Table extends Component {
 
   render() {
     let columnWidths = this.columnWidths
+    console.log('rendered...')
     return (
         <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth }}>
           <Header columns={this.props.columns}
@@ -194,7 +196,7 @@ class Table extends Component {
                 columnSorts={this.state.columnSorts}
                 columnWidths={columnWidths}
           />
-          <ResizeDetector handleWidth onResize={this.handleResize} />
+          <ResizeDetector handleWidth onResize={debounce(this.handleResize, 100)} />
         </div>
     )
   }

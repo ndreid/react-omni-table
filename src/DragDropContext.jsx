@@ -37,10 +37,6 @@ class DragDropContext extends Component {
     this.clearDragState()
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   return nextProps.onDrop !== this.props.onDrop
-  // }
-
   render() {
     return (
       <React.Fragment>
