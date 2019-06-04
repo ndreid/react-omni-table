@@ -52,6 +52,7 @@ class Table extends Component {
 
     this.handleHeadClick = this.handleHeadClick.bind(this)
     this.handleResize = this.handleResize.bind(this)
+    this.handleResize_debounced = debounce(this.handleResize, 100)
 
     this.columnRefs = props.columns.reduce((refs, col) => { refs[col.dataIndex] = React.createRef(); return refs },{})
   }
@@ -196,7 +197,7 @@ class Table extends Component {
                 columnSorts={this.state.columnSorts}
                 columnWidths={columnWidths}
           />
-          <ResizeDetector handleWidth onResize={debounce(this.handleResize, 100)} />
+          <ResizeDetector handleWidth onResize={this.handleResize_debounced} />
         </div>
     )
   }
