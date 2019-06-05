@@ -6,7 +6,6 @@ import Header from './Header'
 import Body from './Body'
 import CSSUnitTranslator from 'css-unit-translator'
 import ResizeDetector from 'react-resize-detector'
-import { debounce } from 'lodash'
 
 import { addTable, delTable } from './redux/actions'
 
@@ -52,7 +51,6 @@ class Table extends Component {
 
     this.handleHeadClick = this.handleHeadClick.bind(this)
     this.handleResize = this.handleResize.bind(this)
-    this.handleResize_debounced = debounce(this.handleResize, 100)
 
     this.columnRefs = props.columns.reduce((refs, col) => { refs[col.dataIndex] = React.createRef(); return refs },{})
   }
@@ -196,7 +194,7 @@ class Table extends Component {
                 columnSorts={this.state.columnSorts}
                 columnWidths={columnWidths}
           />
-          <ResizeDetector handleWidth onResize={this.handleResize_debounced} />
+          <ResizeDetector handleWidth onResize={this.handleResize} />
         </div>
     )
   }
