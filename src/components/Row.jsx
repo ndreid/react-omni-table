@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Cell from './Cell'
 import { PlusSVG, MinusSVG } from './SVG'
-
-import { connect } from 'react-redux'
-import { setIsEditingCell } from './redux/actions'
+import gripImg from '../img_grip.png'
 
 class Row extends Component {
   constructor(props) {
@@ -12,16 +10,14 @@ class Row extends Component {
 
     this.state = {
       hideChildren: false,
-      hovering: false,
+      origPos: {},
+      translate: {},
     }
 
     this.showHideToggle = this.showHideToggle.bind(this)
     this.onCellInput = this.onCellInput.bind(this)
     this.onDragStart = this.onDragStart.bind(this)
     this.onMouseEnter = this.onMouseEnter.bind(this)
-    this.onMouseLeave = this.onMouseLeave.bind(this)
-
-    this.hoveredCells = []
   }
   
   showHideToggle() {
@@ -42,17 +38,19 @@ class Row extends Component {
   }
 
   onDragStart(e) {
+    e.stopPropagation()
     e.preventDefault()
-    this.props.onDragStart(this.props.idMap)
+    this.setState({
+      origPos: {
+        x: e.pageX,
+        y: e.pageY,
+      }
+    })
+    this.props.onDragStart(e, this.props.idMap)
   }
 
   onMouseEnter(e) {
     this.props.onMouseEnter(e, this.props.idMap)
-    this.setState({ hovering: true })
-  }
-
-  onMouseLeave(e) {
-    this.setState({ hovering: false })
   }
 
   render() {
@@ -64,20 +62,19 @@ class Row extends Component {
         ? ' t-draggable' : ''
 
     let style = {
-      ...(this.state.hovering
+      ...(this.props.dragSource && this.props.idMap === this.props.dragSource.idMap
           ? this.props.settings.hoverColors
           : this.props.settings.tierColors[this.props.tier % this.props.settings.tierColors.length]
         ),
       minHeight: this.props.rowHeight,
+      pointerEvents: this.props.dragSource && this.props.dragSource.idMap === this.props.idMap ? 'none' : undefined,
+      zIndex: this.props.dragSource && this.props.dragSource.idMap === this.props.idMap ? 9999 : undefined,
+      ...this.props.style
     }
+    
     return (
-      <div className={`t-row${dragClass}`} style={style} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} draggable>
-        {this.props.data.children
-          ? this.state.hideChildren
-            ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={15} height={15} stroke={style.color}/></div>
-            : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={15} height={15} stroke={style.color}/></div>
-          : <div className={'t-cell t-expand-space'}/>
-        }
+      <div ref='self' id={this.props.idMap} className={'t-row' + dragClass} style={style} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter}>
+        <img className={'t-drag-gutter' + dragClass} src={gripImg} draggable/>
         {this.props.columns.map((col, idx) => {
           let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined
           return <Cell key={idx}
@@ -89,7 +86,16 @@ class Row extends Component {
                       overrideProps={cellOverrideProps}
                       onCellInput={this.onCellInput}
                       setIsEditingCell={this.props.setIsEditingCell}
-                  />
+                  >
+                    {idx === 0
+                      ? this.props.data.children
+                        ? this.state.hideChildren
+                          ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={'1em'} height={'1em'} stroke={style.color}/></div>
+                          : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={'1em'} height={'1em'} stroke={style.color}/></div>
+                        : <div className={'t-cell t-expand-space'}/>
+                      : undefined
+                    }
+                  </Cell>
         }
         )}
       </div>
@@ -111,16 +117,7 @@ Row.propTypes = {
   handleHideChildren: PropTypes.func,
   onDragStart: PropTypes.func.isRequired,
   onMouseEnter: PropTypes.func.isRequired,
-  onColumnResize: PropTypes.func,
+  style: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = state => ({
-  isEditingCell: state.isEditingCell,
-  dragSource: state.dragSource,
-})
-
-const mapDispatchToProps = {
-  setIsEditingCell,
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Row)
+export default Row

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import DataTypes from './DataTypes'
-import { isNumber, numFunc, coalesce } from './extensions'
+import { isNumber, numFunc, coalesce } from '../extensions'
 
 class Cell extends PureComponent {
   constructor(props) {
@@ -112,11 +112,12 @@ class Cell extends PureComponent {
     const style = {
       width: this.props.columnWidth,
       justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
-      paddingLeft: `${0.5 + (this.props.primary ? this.props.tier * 0.5 : 0)}em`,
+      paddingLeft: `${0.5 + (this.props.primary ? this.props.tier + 0.25 * this.props.tier : 0)}em`,
     }
 
     return this.state.dataType === DataTypes.Bool
       ? <div ref={this.props.onResize ? 'cell' : undefined} className='t-cell' style={style}>
+          {this.props.children}
           <input type='checkbox' checked={this.props.data} onChange={this.handleInput}/>
         </div>
       : this.state.editMode
@@ -125,6 +126,7 @@ class Cell extends PureComponent {
           <div ref={this.props.onResize ? 'cell' : undefined} className='t-cell' style={style}
                onDoubleClick={this.handleDoubleClick}
           >
+            {this.props.children}
             {this.getFormattedData()}
           </div>
       )

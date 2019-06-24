@@ -7,7 +7,7 @@ import Body from './Body'
 import CSSUnitTranslator from 'css-unit-translator'
 import ResizeDetector from 'react-resize-detector'
 
-import { addTable, delTable } from './redux/actions'
+import { addTable, delTable } from '../redux/actions'
 
 class Table extends Component {
   constructor(props) {
@@ -28,7 +28,10 @@ class Table extends Component {
       dragEnabled: false,
       fontFamily: fontFamily.replace(new RegExp('"', 'g'), ''),
       fontSize,
-      tableWidth: '100%',
+    }
+
+    this.defaultConfig = {
+      tierDropTargets: {}
     }
 
     let settings = {
@@ -40,6 +43,7 @@ class Table extends Component {
 
     this.state = {
       settings,
+      config: { ...this.defaultConfig, ...props.config },
       columnSorts: [],
       columnWidths: {},
       rowHeight: this.cssUnitTranslator.translate(props.rowHeight, 'px', 0),
@@ -191,6 +195,7 @@ class Table extends Component {
                 rowHeight={this.props.rowHeight}
                 tableId={this.props.tableId}
                 settings={this.state.settings}
+                config={this.state.config}
                 columnSorts={this.state.columnSorts}
                 columnWidths={columnWidths}
           />
@@ -204,6 +209,7 @@ Table.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   settings: PropTypes.object,
+  config: PropTypes.object,
   onCellInput: PropTypes.func,
   tableId: PropTypes.oneOfType([
     PropTypes.string,
@@ -214,6 +220,7 @@ Table.propTypes = {
 
 Table.defaultProps = {
   settings: {},
+  config: {},
   rowHeight: '1.5em',
 }
 

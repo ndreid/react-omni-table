@@ -1,15 +1,20 @@
 .t-ddc {
    max-width: 100%;
    max-height: 100%;
+   min-height: 0px;
 }
  
 .t-table {
   box-sizing: border-box;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   border: solid rgb(167, 167, 167) 1px;
   max-width: 100%;
-  max-height: 100%;
+  /* max-height: 100%; */
+  max-height: max-content;
+  min-height: 0px;
+  min-width: 0px;
   width: fit-content;
 }
 
@@ -21,6 +26,7 @@
   overflow-x: auto;
   min-height: min-content;
   border-bottom: solid rgb(167, 167, 167) 1px;
+  max-height: max-content;
 }
 
 .t-header-wrapper::-webkit-scrollbar {
@@ -53,27 +59,16 @@
   overflow: auto;
 }
 
-.t-body.t-dragging { cursor: grabbing !important }
-
-
 .t-row {
   display: flex;
   min-height: 1.5rem;
   border-bottom: 1px solid rgb(167, 167, 167);
   min-width: fit-content;
 }
+
 .t-row:hover {
-  color: var(--hover-color);
-  background-color: var(--hover-background);
-}
-
-.t-row.t-dragging {
-  /* background-color: #efefef; */
-  box-shadow: 0 0 7px 0 #333;
-}
-
-.t-draggable {
-  cursor: grab;
+  color: var(--hover-color) !important;
+  background-color: var(--hover-background) !important;
 }
 
 .t-cell {
@@ -87,9 +82,9 @@
 }
 
 .t-expand-button, .t-expand-space {
-  min-width: 25px;
-  max-width: 25px;
-  padding: 0px;
+  min-width: 1em;
+  max-width: 1em;
+  margin-right: .25em;
 }
 
 .t-expand-button {
@@ -97,4 +92,15 @@
   cursor: pointer;
   flex: 0 0 auto;
   padding: 0px;
+}
+
+.t-drag-gutter {
+  padding: 2px 0;
+}
+.t-draggable { cursor: grab; }
+.t-dragging { cursor: grabbing; }
+.t-row.t-dragging {
+  /* background-color: #efefef; */
+  box-shadow: 0 0 7px 0 #333;
+  z-index: 9999;
 }

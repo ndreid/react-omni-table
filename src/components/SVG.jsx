@@ -12,8 +12,8 @@ PlusSVG.defaultProps = {
 }
 
 PlusSVG.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   stroke: PropTypes.string.isRequired
 }
 
@@ -28,8 +28,8 @@ MinusSVG.defaultProps = {
 }
 
 MinusSVG.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   stroke: PropTypes.string.isRequired
 }
 
