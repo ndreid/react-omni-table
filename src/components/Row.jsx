@@ -73,7 +73,7 @@ class Row extends Component {
     }
     
     return (
-      <div ref='self' id={this.props.idMap} className={'t-row' + dragClass} style={style} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter}>
+      <div ref='self' id={this.props.idMap} className={'t-row'} style={style} onDragStart={this.onDragStart} onMouseEnter={this.onMouseEnter}>
         <img className={'t-drag-gutter' + dragClass} src={gripImg} draggable/>
         {this.props.columns.map((col, idx) => {
           let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined

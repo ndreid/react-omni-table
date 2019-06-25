@@ -125,15 +125,12 @@ class Table extends Component {
     for (let row of rows) {
       for (let i = 0; i < this.props.columns.length; i++) {
         let col = this.props.columns[i]
-      // for (let col of this.props.columns) {
         let txt = row[col.dataIndex]
         if (txt === undefined || txt === null)
           continue
         let width = Math.ceil(context.measureText(txt).width) + emPx /* text width + padding*/
         if (i === 0)
           width += (tier + 1) * emPx * 1.25 /* + tier primary column padding*/
-        if (i === 0)
-          console.log(tier, width, txt)
         if (!columnWidths[col.dataIndex] || width > columnWidths[col.dataIndex])
           columnWidths[col.dataIndex] = width
       }

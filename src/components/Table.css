@@ -97,7 +97,7 @@
 .t-drag-gutter {
   padding: 2px 0;
 }
-.t-draggable { cursor: grab; }
+.t-drag-gutter.t-draggable { cursor: grab; }
 .t-dragging { cursor: grabbing; }
 .t-row.t-dragging {
   /* background-color: #efefef; */
