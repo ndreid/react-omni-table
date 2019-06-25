@@ -100,7 +100,6 @@
 .t-drag-gutter.t-draggable { cursor: grab; }
 .t-dragging { cursor: grabbing; }
 .t-row.t-dragging {
-  /* background-color: #efefef; */
   box-shadow: 0 0 7px 0 #333;
   z-index: 9999;
 }
