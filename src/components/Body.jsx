@@ -163,6 +163,7 @@ class Body extends PureComponent {
   handleDragStart(e, idMap) {
     let data = this.sortedData.filter(({info}) => info.idMap === idMap || info.idMap.startsWith(idMap + '|'))
     let box = ReactDOM.findDOMNode(this.refs[idMap]).getBoundingClientRect()
+    this.isFirstDragRender = true
     this.props.setDragSource(this.props.tableId, idMap, data, { x: box.x, y: box.y }, { x: e.pageX - box.x, y: e.pageY - box.y })
   }
 
@@ -171,6 +172,17 @@ class Body extends PureComponent {
       return
 
     let direction = e.movementY < 0 ? 'up' : 'down'
+
+    if (this.props.dragSource.tableId === this.props.tableId) {
+      let srcIdx = this.expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
+      let tgtIdx = this.expandedRows.findIndex(({info}) => info.idMap === idMap)
+      if (!isNaN(srcIdx) && !isNaN(tgtIdx) && srcIdx === tgtIdx + (direction === 'up' ? -1 : 1)) {
+        this.props.setDropTarget()
+        this.props.setDragDirection()
+        return
+      }
+    }
+
     if (!this.props.dropTarget
       || this.props.dropTarget.idMap !== idMap
       || this.props.dragDirection !== direction
@@ -191,7 +203,11 @@ class Body extends PureComponent {
     }, 0)
   }
 
+
+  isFirstDragRender = false
   render() {
+    let firstDragRender = this.isFirstDragRender
+    this.isFirstDragRender = false
     let classes = `t-body${this.props.dragSource ? ' t-dragging' : ''}`
 
     let windowParams = this.getWindowParams()
@@ -200,38 +216,41 @@ class Body extends PureComponent {
       || this.props.dragSource && this.props.dragSource.idMap === info.idMap
     )
     let srcIdx, tgtIdx
-    if (this.props.dragSource && this.props.dropTarget) {
-      let dragType =
-        this.props.dragSource.tableId === this.props.tableId && this.props.dropTarget.tableId === this.props.tableId ? 'internal-drag'
-        : this.props.dragSource.tableId === this.props.tableId && this.props.dropTarget.tableId !== this.props.tableId ? 'cross-drag-out'
-        : this.props.dragSource.tableId !== this.props.tableID && this.props.dropTarget.tableId === this.props.tableId ? 'cross-drag-in'
-        : 'none'
-
+    if (this.props.dragSource) {
       srcIdx = this.props.dragSource.tableId === this.props.tableId ? rows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap) : undefined
-      // let srcLastIdx = this.props.dragSource.tableId === this.props.tableId ? _Array.findLastIndex(rows, ({info}) => info.idMap.startsWith(this.props.dragSource.idMap + '-')) : undefined
-      tgtIdx = this.props.dropTarget.tableId === this.props.tableId ? rows.findIndex(({info}) => info.idMap === this.props.dropTarget.idMap) : undefined
-      // let tgtNextIsFamily = tgtIdx > 0 && rows[tgtIdx + 1] && rows[tgtIdx + 1].info.idMap.startsWith(this.props.dropTarget.idMap + '|')
-      // if (tgtNextIsFamily){
-      //   for (let i = srcIdx; i <= srcLastIdx; i++) {
-      //     rows[i].info.tier = rows[tgtIdx].info.tier + 1 + (rows[i].info.tier - rows[srcIdx].info.tier)
-      //   }
-      // }
-      // if (srcLastIdx === -1)
-      //   srcLastIdx = srcIdx
-      // let srcRowCount = srcLastIdx - srcIdx + 1
-      switch (dragType) {
-        case 'internal-drag':
-          if (tgtIdx > srcIdx && this.props.dragDirection === 'up')
-            tgtIdx--
-          if (tgtIdx < srcIdx && this.props.dragDirection === 'down')
-            tgtIdx++
-        break
-        case 'cross-drag-out':
-          tgtIdx = rows.length - 1
-        break
-        case 'cross-drag-in':
-          srcIdx = 0
-        break
+
+      if (this.props.dropTarget) {
+        // let srcLastIdx = this.props.dragSource.tableId === this.props.tableId ? _Array.findLastIndex(rows, ({info}) => info.idMap.startsWith(this.props.dragSource.idMap + '-')) : undefined
+        tgtIdx = this.props.dropTarget.tableId === this.props.tableId ? rows.findIndex(({info}) => info.idMap === this.props.dropTarget.idMap) : undefined
+        // let tgtNextIsFamily = tgtIdx > 0 && rows[tgtIdx + 1] && rows[tgtIdx + 1].info.idMap.startsWith(this.props.dropTarget.idMap + '|')
+        // if (tgtNextIsFamily){
+        //   for (let i = srcIdx; i <= srcLastIdx; i++) {
+        //     rows[i].info.tier = rows[tgtIdx].info.tier + 1 + (rows[i].info.tier - rows[srcIdx].info.tier)
+        //   }
+        // }
+        // if (srcLastIdx === -1)
+        //   srcLastIdx = srcIdx
+        // let srcRowCount = srcLastIdx - srcIdx + 1
+
+        
+        let dragType = this.props.dragSource.tableId === this.props.tableId && this.props.dropTarget.tableId === this.props.tableId ? 'internal-drag'
+          : this.props.dragSource.tableId === this.props.tableId && this.props.dropTarget.tableId !== this.props.tableId ? 'cross-drag-out'
+          : this.props.dragSource.tableId !== this.props.tableID && this.props.dropTarget.tableId === this.props.tableId ? 'cross-drag-in'
+          : 'none'
+        switch (dragType) {
+          case 'internal-drag':
+            if (tgtIdx > srcIdx && this.props.dragDirection === 'up')
+              tgtIdx--
+            if (tgtIdx < srcIdx && this.props.dragDirection === 'down')
+              tgtIdx++
+          break
+          case 'cross-drag-out':
+            tgtIdx = rows.length - 1
+          break
+          case 'cross-drag-in':
+            srcIdx = 0
+          break
+        }
       }
     }
 
@@ -277,7 +296,7 @@ class Body extends PureComponent {
                 style.left = this.props.dragSource.pos.x
               }
               style.transform = `translate(0px, ${translateY}px)`
-              style.transition = 'transform 500ms'
+              style.transition = 'transform ' + (firstDragRender ? '0ms' : '500ms')
             }
 
             return <Row key={info.idMap}

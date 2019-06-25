@@ -148,12 +148,16 @@ const App = () => {
   }
 
   return (
-    <DragDropArea width='100%'>
+    <DragDropArea width='100%' onDrop={onDrop}>
       <div style={{display: 'flex', maxHeight: '100%'}}>
           <Table tableId='table1' columns={columns} data={data1} rowHeight={25} settings={settings} config={config}/>
-          <Table tableId='table2' columns={columns.slice(0,1)} data={data2} rowHeight={25} settings={settings}/>
+          {/* <Table tableId='table2' columns={columns.slice(0,1)} data={data2} rowHeight={25} settings={settings}/> */}
       </div>
     </DragDropArea>
   )
 };
+
+const onDrop = (...args) => {
+  console.log(args)
+}
 render(<App />, document.getElementById("root"));

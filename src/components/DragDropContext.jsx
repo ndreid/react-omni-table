@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
-import { setDragSource, setDropTarget } from '../redux/actions'
+import { setDragSource, setDropTarget, setDragDirection } from '../redux/actions'
 
 class DragDropContext extends Component {
   constructor() {
@@ -23,6 +23,7 @@ class DragDropContext extends Component {
     }
     this.props.setDragSource()
     this.props.setDropTarget()
+    this.props.setDragDirection()
   }
   
   handleMouseMove(e) {
@@ -76,6 +77,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   setDragSource,
   setDropTarget,
+  setDragDirection,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DragDropContext)
