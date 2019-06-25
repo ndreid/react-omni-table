@@ -65,6 +65,7 @@ class Table extends Component {
     let context = document.createElement('canvas').getContext('2d')
     context.font = 'bold ' + this.state.settings.fontSize + ' ' + this.state.settings.fontFamily
 
+    let emPx = this.cssUnitTranslator.translate('1em', 'px', 0, false)
     for (let col of this.props.columns) {
       let settingsWidth, contentWidth, titleWidth
       if (col.style && col.style.minWidth) {
@@ -73,8 +74,8 @@ class Table extends Component {
           : +col.style.minWidth
       }
 
-      contentWidth = this.state.columnWidths[col.dataIndex] + 16/*padding*/
-      titleWidth = Math.ceil(context.measureText(col.name.split(' ').reduce((a, b) => a.length > b.length ? a : b)).width + 16/*padding*/)
+      contentWidth = this.state.columnWidths[col.dataIndex]
+      titleWidth = Math.ceil(context.measureText(col.name.split(' ').reduce((a, b) => a.length > b.length ? a : b)).width + emPx/*padding*/)
       widths[col.dataIndex] = {
         actual: Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25),
         extra: Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25) - Math.max(contentWidth || 0, titleWidth || 0, 25)
@@ -84,7 +85,7 @@ class Table extends Component {
     if (!this.state.mounted)
       return Object.entries(widths).map(([k,v]) => [k, v.actual]).reduce((obj, kvp) => { obj[kvp[0]] = kvp[1]; return obj }, {})
 
-    let remainingWidth = this.refs.table.clientWidth - Object.values(widths).reduce((sum,w) => sum + w.actual, 0) - (this.props.scrollbarYIsVisible ? 17 : 0) - 25/*expand*/ - 2/*border*/
+    let remainingWidth = this.refs.table.clientWidth - Object.values(widths).reduce((sum,w) => sum + w.actual, 0) - (this.props.scrollbarYIsVisible ? 17 : 0) - 18/*drag*/ - 2/*border*/
     if (remainingWidth <= 0)
       return Object.entries(widths).map(([k,v]) => [k, v.actual]).reduce((obj, kvp) => { obj[kvp[0]] = kvp[1]; return obj }, {})
 
@@ -116,22 +117,28 @@ class Table extends Component {
     return Object.entries(widths).map(([k,v]) => [k, v.actual]).reduce((obj, kvp) => { obj[kvp[0]] = kvp[1]; return obj }, {})
   }
 
-  getColumnWidths_r(rows, columnWidths = {}, context) {
+  getColumnWidths_r(rows, columnWidths = {}, context, tier = 0, emPx = this.cssUnitTranslator.translate('1em', 'px', 0, false)) {
     if (!context) {
       context = document.createElement('canvas').getContext('2d')
       context.font = this.state.settings.fontSize + ' ' + this.state.settings.fontFamily
     }
     for (let row of rows) {
-      for (let col of this.props.columns) {
+      for (let i = 0; i < this.props.columns.length; i++) {
+        let col = this.props.columns[i]
+      // for (let col of this.props.columns) {
         let txt = row[col.dataIndex]
         if (txt === undefined || txt === null)
           continue
-        let width = Math.ceil(context.measureText(txt).width)
+        let width = Math.ceil(context.measureText(txt).width) + emPx /* text width + padding*/
+        if (i === 0)
+          width += (tier + 1) * emPx * 1.25 /* + tier primary column padding*/
+        if (i === 0)
+          console.log(tier, width, txt)
         if (!columnWidths[col.dataIndex] || width > columnWidths[col.dataIndex])
           columnWidths[col.dataIndex] = width
       }
       if (Array.isArray(row.children))
-        this.getColumnWidths_r(row.children, columnWidths, context)
+        this.getColumnWidths_r(row.children, columnWidths, context, tier + 1, emPx)
     }
     return columnWidths
   }
