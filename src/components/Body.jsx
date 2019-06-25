@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import DataTypes from './DataTypes'
 import Row from './Row'
 import memoize from 'memoize-one'
-import { _Array } from 'data-type-ext'
+import { _Array, _Number } from 'data-type-ext'
 
 import { connect } from 'react-redux'
 import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection, setIsEditingCell } from '../redux/actions'
@@ -171,7 +171,11 @@ class Body extends PureComponent {
     if (!this.props.dragSource || this.props.dragSource.idMap === idMap)
       return
 
-    let direction = e.movementY < 0 ? 'up' : 'down'
+    let direction = e.movementY < 0
+        || this.props.dropTarget && this.props.dropTarget.tableId !== this.props.tableId
+        || !this.props.dropTarget && this.props.dragSource.tableId !== this.props.tableId 
+      ? 'up'
+      : 'down'
 
     if (this.props.dragSource.tableId === this.props.tableId) {
       let srcIdx = this.expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
@@ -248,7 +252,10 @@ class Body extends PureComponent {
             tgtIdx = rows.length - 1
           break
           case 'cross-drag-in':
-            srcIdx = 0
+            srcIdx = -1
+            if (this.props.dragDirection === 'up')
+              tgtIdx--
+            
           break
         }
       }
@@ -283,7 +290,7 @@ class Body extends PureComponent {
               let translateY = 0
               if (index >= srcIdx)
                 translateY += this.props.rowHeight
-              if (!isNaN(tgtIdx) && (index - srcIdx) * (index - tgtIdx) <= 0)
+              if (!isNaN(tgtIdx) && _Number.isBetween(index, srcIdx, tgtIdx))
                 translateY += (this.props.rowHeight) * (srcIdx > tgtIdx ? 1 : -1)
               if (translateY !== 0)
                 translateY = Math.abs(translateY) + 1 * Math.sign(translateY)
@@ -310,7 +317,7 @@ class Body extends PureComponent {
               {...rowProps}
             />
           })}
-          <div key={Infinity} className='t-body-buffer' style={{minHeight: !isNaN(tgtIdx) && tgtIdx === rows.length - 1 ? this.props.rowHeight : windowParams.scrollBuffer.bottom}}/>
+          <div key={Infinity} className='t-body-buffer' style={{minHeight: !isNaN(tgtIdx) && this.props.dropTarget.tableId === this.props.tableId && tgtIdx === rows.length - 1 ? this.props.rowHeight : windowParams.scrollBuffer.bottom}}/>
       </div>
     )
   }
