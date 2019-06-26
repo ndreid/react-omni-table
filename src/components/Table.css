@@ -97,6 +97,10 @@
 .t-drag-gutter {
   padding: 2px 0;
 }
+.t-drag-gutter-space {
+  width: 18px;
+  height: 100%;
+}
 .t-drag-gutter.t-draggable { cursor: grab; }
 .t-dragging { cursor: grabbing; }
 .t-row.t-dragging {

@@ -100,7 +100,7 @@ const App = () => {
           col19: 'owijef',
           col20: 'owijef',
           children: [
-            { id: i + 0.11, name: 'Grandchild' }
+            { id: i + 0.11, name: 'Grandchild', settings: { draggable: false } }
           ]
         },
         {
