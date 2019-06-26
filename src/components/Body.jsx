@@ -170,6 +170,7 @@ class Body extends PureComponent {
       ? 'up'
       : 'down'
 
+    let srcIdx = this.expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
     let tgtIdx = this.expandedRows.findIndex(({info}) => info.idMap === idMap)
     if (direction === 'up') {
       tgtIdx = tgtIdx === 0 ? undefined : tgtIdx - 1
@@ -178,7 +179,6 @@ class Body extends PureComponent {
       tgtIdx--
 
     if (this.props.dragSource.tableId === this.props.tableId) {
-      let srcIdx = this.expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
       if (!isNaN(srcIdx) && !isNaN(tgtIdx) && srcIdx === tgtIdx + 1) {
         this.props.setDropTarget()
         return
