@@ -132,8 +132,8 @@ const App = () => {
       ],
     })
   }
-  let data1 = tableData.slice(0, 10)
-  let data2 = tableData.slice(10)
+  let data1 = tableData.slice(0, 98)
+  let data2 = tableData.slice(98)
 
 
   let config = {

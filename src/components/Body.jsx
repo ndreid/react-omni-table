@@ -247,14 +247,14 @@ class Body extends PureComponent {
       '--hover-color': this.props.settings.hoverColors.color,
       '--hover-background': this.props.settings.hoverColors.backgroundColor,
       height: (
-          (this.expandedRows.length * this.props.rowHeight + this.expandedRows.length)
-          || (this.props.rowHeight + 1)
+          (this.expandedRows.length * this.props.rowHeight)
+          || (this.props.rowHeight)
         )
         + (this.state.xScrollVisible ? 17 : 0)
         + (this.props.dragSource && this.props.dropTarget
             && this.props.dragSource.tableId !== this.props.tableId
             && this.props.dropTarget.tableId === this.props.tableId
-          ? this.props.rowHeight + 1
+          ? this.props.rowHeight
           : 0
           )
     }
@@ -285,8 +285,6 @@ class Body extends PureComponent {
                   translateY += this.props.rowHeight
                 if (!isNaN(tgtIdx) && _Number.isBetween(index, srcIdx, tgtIdx, srcIdx < tgtIdx))
                   translateY += (this.props.rowHeight) * (srcIdx > tgtIdx ? 1 : -1)
-                if (translateY !== 0)
-                  translateY = Math.abs(translateY) + 1 * Math.sign(translateY)
                 if (this.props.dragSource.idMap === info.idMap) {
                   rowStyle.position = 'fixed'
                   rowStyle.maxWidth = this.self.current.clientWidth
