@@ -45,7 +45,17 @@ class DragDropContext extends Component {
       && this.props.dropTarget
       && typeof this.props.onDrop === 'function'
     ) {
-      this.props.onDrop(this.props.dragSource, this.props.dropTarget, this.props.dragDirection)
+      this.props.onDrop({
+        source: {
+          tableId: this.props.dragSource.tableId,
+          idMap: this.props.dragSource.idMap,
+        },
+        target: {
+          tableId: this.props.dropTarget.tableId,
+          idMap: this.props.dropTarget.idMap,
+        },
+        direction: this.props.dragDirection
+      })
     }
     this.clearDragState()
   }
@@ -56,7 +66,7 @@ class DragDropContext extends Component {
 
   render() {
     return (
-      <div className='t-ddc' onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseLeave} style={{ width: this.props.width}}>
+      <div className='t-ddc' onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseLeave} style={{ width: this.props.width }}>
         {this.props.children}
       </div>
     )

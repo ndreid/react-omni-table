@@ -7,7 +7,7 @@ import memoize from 'memoize-one'
 import { _Array, _Number } from 'data-type-ext'
 
 import { connect } from 'react-redux'
-import { setScrollLeft, setScrollbarYVisibility, setDragSource, setDropTarget, setDragDirection, setIsEditingCell } from '../redux/actions'
+import { setXScroll, setYScrollVisible, setDragSource, setDropTarget, setDragDirection, setIsEditingCell } from '../redux/actions'
 
 class Body extends PureComponent {
   constructor(props) {
@@ -28,6 +28,7 @@ class Body extends PureComponent {
         top: 0,
         bottom: 0
       },
+      xScrollVisible: false,
     }
 
     this.scrollTop = 0
@@ -79,16 +80,13 @@ class Body extends PureComponent {
 
   get expandedRows() {
     let expandedRows = []
-    let isDragging = this.props.dragSource
-    let isCrossTableDrag = this.props.dragSource && this.props.dragSource.tableId !== this.props.tableId
     for (let data of this.sortedData) {
       // Ignore if parent row is collapsed or being dragged
-      if (this.state.collapsedIdMaps.some(collapsedIdMap => data.info.idMap.startsWith(collapsedIdMap + '|'))
-        || (this.props.dragSource && data.info.idMap.startsWith(this.props.dragSource.idMap + '|'))
+      if (!this.state.collapsedIdMaps.some(collapsedIdMap => data.info.idMap.startsWith(collapsedIdMap + '|'))
+        && !(this.props.dragSource && data.info.idMap.startsWith(this.props.dragSource.idMap + '|'))
       ) {
-        continue
+        expandedRows.push(data)
       }
-      expandedRows.push(data)
     }
     return expandedRows
   }
@@ -112,7 +110,7 @@ class Body extends PureComponent {
     let top = start * this.props.rowHeight
     let bottom = (expandedRows.length - stop - 1) * this.props.rowHeight
 
-    if (this.props.dragSource) {
+    if (this.props.dragSource && this.props.dragSource.tableId === this.props.tableId) {
       let dragIdx = expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
       if (dragIdx < start)
         top -= this.props.rowHeight
@@ -135,7 +133,7 @@ class Body extends PureComponent {
   }
 
   handleScroll(e) {
-    this.props.setScrollLeft(e.target.scrollLeft)
+    this.props.setXScroll(this.props.tableId, e.target.scrollLeft)
 
     let needsUpdate = false
     if (e.target.scrollTop !== this.scrollTop) {
@@ -143,18 +141,23 @@ class Body extends PureComponent {
       needsUpdate = true
     }
 
-    if (this.props.scrollbarYIsVisible !== (this.self.current.scrollHeight > this.self.current.clientHeight)) {
-      this.props.setScrollbarYVisibility(!this.props.scrollbarYIsVisible)
-    } else if (needsUpdate) {
-      this.forceUpdate()
+    if (this.props.yScrollVisible !== (this.self.current.scrollHeight > this.self.current.clientHeight)) {
+      this.props.setYScrollVisible(this.props.tableId, !this.props.yScrollVisible)
+      needsUpdate = false
     }
+    if (this.state.xScrollVisible !== (this.self.current.scrollWidth > this.self.current.clientWidth)) {
+      this.setState({ xScrollVisible: !this.state.xScrollVisible })
+      needsUpdate = false
+    }
+    if (needsUpdate)
+      this.forceUpdate()
   }
 
   handleDragStart(e, idMap) {
     let data = this.sortedData.filter(({info}) => info.idMap === idMap || info.idMap.startsWith(idMap + '|'))
     let box = ReactDOM.findDOMNode(this.refs[idMap]).getBoundingClientRect()
     this.isFirstDragRender = true
-    this.props.setDragSource(this.props.tableId, idMap, data, { x: box.x, y: box.y }, { x: e.pageX - box.x, y: e.pageY - box.y })
+    this.props.setDragSource(this.props.tableId, idMap, { x: box.x, y: box.y }, { x: e.pageX - box.x, y: e.pageY - box.y })
   }
 
   handleMouseRowEnter(e, idMap) {
@@ -190,9 +193,10 @@ class Body extends PureComponent {
     let _this = this
     setTimeout(() => {
       window.requestAnimationFrame(() => {
-        if (_this.props.scrollbarYIsVisible !== (_this.self.current.scrollHeight > _this.self.current.clientHeight)) {
-          _this.props.setScrollbarYVisibility(!_this.props.scrollbarYIsVisible)
-        }
+        if (_this.props.yScrollVisible !== (_this.self.current.scrollHeight > _this.self.current.clientHeight))
+          _this.props.setYScrollVisible(this.props.tableId, !_this.props.yScrollVisible)
+        if (_this.state.xScrollVisible !== (_this.self.current.scrollWidth > _this.self.current.clientWidth))
+          _this.setState({ xScrollVisible: !_this.state.xScrollVisible })
       })
     }, 0)
   }
@@ -242,7 +246,17 @@ class Body extends PureComponent {
     let style = {
       '--hover-color': this.props.settings.hoverColors.color,
       '--hover-background': this.props.settings.hoverColors.backgroundColor,
-      minHeight: rows.length === 0 ? this.props.rowHeight : undefined,
+      height: (
+          (this.expandedRows.length * this.props.rowHeight + this.expandedRows.length)
+          || (this.props.rowHeight + 1)
+        )
+        + (this.state.xScrollVisible ? 17 : 0)
+        + (this.props.dragSource && this.props.dropTarget
+            && this.props.dragSource.tableId !== this.props.tableId
+            && this.props.dropTarget.tableId === this.props.tableId
+          ? this.props.rowHeight + 1
+          : 0
+          )
     }
 
     let rowProps = {
@@ -262,39 +276,42 @@ class Body extends PureComponent {
     return (             
       <div ref={this.self} className={classes} onScroll={this.handleScroll} style={style}>
           <div key={-1} className='t-body-buffer' style={{minHeight: windowParams.scrollBuffer.top}}/>
-          {rows.map(({ data, info }, index) => {
-            let rowStyle = {}
-            if (!isNaN(srcIdx)) {
-              let translateY = 0
-              if (index >= srcIdx)
-                translateY += this.props.rowHeight
-              if (!isNaN(tgtIdx) && _Number.isBetween(index, srcIdx, tgtIdx))
-                translateY += (this.props.rowHeight) * (srcIdx > tgtIdx ? 1 : -1)
-              if (translateY !== 0)
-                translateY = Math.abs(translateY) + 1 * Math.sign(translateY)
-              if (this.props.dragSource.idMap === info.idMap) {
-                rowStyle.position = 'fixed'
-                rowStyle.maxWidth = this.self.current.clientWidth
-                rowStyle.minWidth = 0
-                rowStyle.overflow = 'hidden'
-                rowStyle.top = this.props.dragSource.pos.y
-                rowStyle.left = this.props.dragSource.pos.x
+          {rows.length > 0
+            ? rows.map(({ data, info }, index) => {
+              let rowStyle = {}
+              if (!isNaN(srcIdx)) {
+                let translateY = 0
+                if (index >= srcIdx)
+                  translateY += this.props.rowHeight
+                if (!isNaN(tgtIdx) && _Number.isBetween(index, srcIdx, tgtIdx))
+                  translateY += (this.props.rowHeight) * (srcIdx > tgtIdx ? 1 : -1)
+                if (translateY !== 0)
+                  translateY = Math.abs(translateY) + 1 * Math.sign(translateY)
+                if (this.props.dragSource.idMap === info.idMap) {
+                  rowStyle.position = 'fixed'
+                  rowStyle.maxWidth = this.self.current.clientWidth
+                  rowStyle.minWidth = 0
+                  rowStyle.overflow = 'hidden'
+                  rowStyle.top = this.props.dragSource.pos.y
+                  rowStyle.left = this.props.dragSource.pos.x
+                }
+                rowStyle.transform = `translate(0px, ${translateY}px)`
+                rowStyle.transition = 'transform ' + (firstDragRender ? '0ms' : '500ms')
               }
-              rowStyle.transform = `translate(0px, ${translateY}px)`
-              rowStyle.transition = 'transform ' + (firstDragRender ? '0ms' : '500ms')
-            }
 
-            return <Row key={info.idMap}
-              ref={info.idMap}
-              id={data.id}
-              idMap={info.idMap}
-              tier={info.tier}
-              data={data}
-              style={rowStyle}
-              isDragging={!!this.props.dragSource && this.props.dragSource.idMap === info.idMap}
-              {...rowProps}
-            />
-          })}
+              return <Row key={info.idMap}
+                ref={info.idMap}
+                id={data.id}
+                idMap={info.idMap}
+                tier={info.tier}
+                data={data}
+                style={rowStyle}
+                isDragging={!!this.props.dragSource && this.props.dragSource.idMap === info.idMap}
+                {...rowProps}
+              />
+            })
+            : <div onMouseEnter={e => this.handleMouseRowEnter(e, undefined)} style={{ height: this.props.rowHeight }}></div>
+          }
           <div key={Infinity} className='t-body-buffer' style={{minHeight: !isNaN(tgtIdx) && this.props.dropTarget.tableId === this.props.tableId && tgtIdx === rows.length - 1 ? this.props.rowHeight : windowParams.scrollBuffer.bottom}}/>
       </div>
     )
@@ -312,8 +329,8 @@ Body.propTypes = {
   columnWidths: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = state => ({
-  scrollbarYIsVisible: state.scrollbarYIsVisible,
+const mapStateToProps = (state, props) => ({
+  yScrollVisible: state.yScrollVisible[props.tableId],
   dragSource: state.dragSource,
   dropTarget: state.dropTarget,
   dragDirection: state.dragDirection,
@@ -321,8 +338,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  setScrollLeft,
-  setScrollbarYVisibility,
+  setXScroll,
+  setYScrollVisible,
   setDragSource,
   setDropTarget,
   setDragDirection,

@@ -85,7 +85,7 @@ class Table extends Component {
     if (!this.state.mounted)
       return Object.entries(widths).map(([k,v]) => [k, v.actual]).reduce((obj, kvp) => { obj[kvp[0]] = kvp[1]; return obj }, {})
 
-    let remainingWidth = this.refs.table.clientWidth - Object.values(widths).reduce((sum,w) => sum + w.actual, 0) - (this.props.scrollbarYIsVisible ? 17 : 0) - 18/*drag*/ - 2/*border*/
+    let remainingWidth = this.refs.table.clientWidth - Object.values(widths).reduce((sum,w) => sum + w.actual, 0) - (this.props.yScrollVisible ? 17 : 0) - 18/*drag*/ - 2/*border*/
     if (remainingWidth <= 0)
       return Object.entries(widths).map(([k,v]) => [k, v.actual]).reduce((obj, kvp) => { obj[kvp[0]] = kvp[1]; return obj }, {})
 
@@ -186,7 +186,8 @@ class Table extends Component {
     let columnWidths = this.columnWidths
     return (
         <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth, maxWidth: this.state.settings.tableWidth, minWidth: this.state.settings.tableWidth }}>
-          <Header columns={this.props.columns}
+          <Header tableId={this.props.tableId}
+                  columns={this.props.columns}
                   columnSorts={this.state.columnSorts}
                   settings={this.state.settings}
                   onHeadClick={this.handleHeadClick}
@@ -228,8 +229,8 @@ Table.defaultProps = {
   rowHeight: '1.5em',
 }
 
-const mapStateToProps = state => ({
-  scrollbarYIsVisible: state.scrollbarYIsVisible
+const mapStateToProps = (state, props) => ({
+  yScrollVisible: state.yScrollVisible[props.tableId]
 })
 
 const mapDispatchToProps = {

@@ -132,8 +132,8 @@ const App = () => {
       ],
     })
   }
-  let data1 = tableData.slice(0, 80)
-  let data2 = tableData.slice(80)
+  let data1 = tableData.slice(0, 0)
+  let data2 = tableData.slice(0)
 
 
   let config = {
@@ -149,9 +149,13 @@ const App = () => {
 
   return (
     <DragDropArea width='100%' onDrop={onDrop}>
-      <div style={{display: 'flex', maxHeight: '100%'}}>
+      <div style={{display: 'flex', height:'100%', width:'100%', maxHeight: '100%', maxWidth: '100%'}}>
+        <div style={{flex: '1 1 auto', minWidth: '0px'}}>
           <Table tableId='table1' columns={columns} data={data1} rowHeight={25} settings={settings} config={config}/>
-          <Table tableId='table2' columns={columns.slice(0,1)} data={data2} rowHeight={25} settings={settings}/>
+        </div>
+        <div style={{flex: '1 1 auto', minWidth: 0}}>
+          <Table tableId='table2' columns={columns.slice(0,6)} data={data2} rowHeight={25} settings={settings}/>
+        </div>
       </div>
     </DragDropArea>
   )

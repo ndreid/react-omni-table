@@ -8,17 +8,18 @@ import { connect } from 'react-redux'
 class Header extends Component {
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.scrollLeft !== nextProps.scrollLeft) {
-      ReactDOM.findDOMNode(this.refs.header).scrollLeft = nextProps.scrollLeft
+    if (this.props.xScroll !== nextProps.xScroll) {
+      ReactDOM.findDOMNode(this.refs.header).scrollLeft = nextProps.xScroll
     }
 
     return (
       this.props.columns !== nextProps.columns
       || this.props.columnSorts !== nextProps.columnSorts
       || this.props.columnWidths !== nextProps.columnWidths
-      || this.props.scrollbarYIsVisible !== nextProps.scrollbarYIsVisible
+      || this.props.yScrollVisible !== nextProps.yScrollVisible
     )
   }
+
 
   render() {
     return (
@@ -34,7 +35,7 @@ class Header extends Component {
               onClick={this.props.onHeadClick}
             />
           )}
-          {this.props.scrollbarYIsVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
+          {this.props.yScrollVisible ? <div style={{maxWidth: 17, minWidth: 17}}/> : undefined}
         </div>
       </div>
     )
@@ -42,17 +43,17 @@ class Header extends Component {
 }
 
 Header.propTypes = {
+  tableId: PropTypes.any.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  scrollLeft: PropTypes.number,
   columnSorts: PropTypes.array.isRequired,
   onHeadClick: PropTypes.func.isRequired,
   columnRefs: PropTypes.object.isRequired,
   columnWidths: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = state => ({
-  scrollLeft: state.scrollLeft,
-  scrollbarYIsVisible: state.scrollbarYIsVisible,
+const mapStateToProps = (state, props) => ({
+  xScroll: state.xScroll[props.tableId],
+  yScrollVisible: state.yScrollVisible//[props.tableId],
 })
 
 export default connect(mapStateToProps)(Header)

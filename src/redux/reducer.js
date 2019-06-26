@@ -1,5 +1,5 @@
-import { SET_SCROLL_LEFT,
-         SET_SCROLLBAR_Y_VISIBILITY,
+import { SET_X_SCROLL,
+         SET_Y_SCROLL_VISIBLE,
          SET_IS_EDITING_CELL,
          ADD_TABLE,
          DEL_TABLE,
@@ -8,23 +8,23 @@ import { SET_SCROLL_LEFT,
          SET_DRAG_DIRECTION } from './action-types'
 
 const initialState = {
-  scrollLeft: 0,
-  scrollbarYIsVisible: false,
+  xScroll: {},
+  yScrollVisible: {},
   isEditingCell: false,
   tableIds: [],
 }
 
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case SET_SCROLL_LEFT:
+    case SET_X_SCROLL:
       return {
         ...state,
-        scrollLeft: payload
+        xScroll: { ...state.xScroll, [payload.tableId]: payload.xScroll }
       }
-    case SET_SCROLLBAR_Y_VISIBILITY:
+    case SET_Y_SCROLL_VISIBLE:
       return {
         ...state,
-        scrollbarYIsVisible: payload
+        yScrollVisible: { ...state.yScrollVisible, [payload.tableId]: payload.isVisible }
       }
     case SET_IS_EDITING_CELL:
       return {
