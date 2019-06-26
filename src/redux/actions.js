@@ -1,4 +1,4 @@
-import { SET_X_SCROLL, SET_Y_SCROLL_VISIBLE, SET_IS_EDITING_CELL, ADD_TABLE, DEL_TABLE, SET_DRAG_SOURCE, SET_DROP_TARGET, SET_DRAG_DIRECTION } from './action-types'
+import { SET_X_SCROLL, SET_Y_SCROLL_VISIBLE, SET_IS_EDITING_CELL, ADD_TABLE, DEL_TABLE, SET_DRAG_SOURCE, SET_DROP_TARGET } from './action-types'
 import { coalesce } from '../extensions'
 
 export const setYScrollVisible = (tableId, isVisible) => ({
@@ -34,9 +34,4 @@ export const setDragSource = (tableId, idMap, pos, offset) => ({
 export const setDropTarget = (tableId, idMap) => ({
   type: SET_DROP_TARGET,
   payload: coalesce(tableId, idMap) === undefined ? undefined : { tableId, idMap }
-})
-
-export const setDragDirection = direction => ({
-  type: SET_DRAG_DIRECTION,
-  payload: direction,
 })

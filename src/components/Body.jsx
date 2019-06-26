@@ -7,7 +7,7 @@ import memoize from 'memoize-one'
 import { _Array, _Number } from 'data-type-ext'
 
 import { connect } from 'react-redux'
-import { setXScroll, setYScrollVisible, setDragSource, setDropTarget, setDragDirection, setIsEditingCell } from '../redux/actions'
+import { setXScroll, setYScrollVisible, setDragSource, setDropTarget, setIsEditingCell } from '../redux/actions'
 
 class Body extends PureComponent {
   constructor(props) {
@@ -181,7 +181,6 @@ class Body extends PureComponent {
     if (this.props.dragSource.tableId === this.props.tableId) {
       if (!isNaN(srcIdx) && !isNaN(tgtIdx) && srcIdx === tgtIdx + 1) {
         this.props.setDropTarget()
-        this.props.setDragDirection()
         return
       }
     }
@@ -190,10 +189,8 @@ class Body extends PureComponent {
 
     if (!this.props.dropTarget
       || this.props.dropTarget.idMap !== tgtIdMap
-      || this.props.dragDirection !== direction
     ) {
       this.props.setDropTarget(this.props.tableId, tgtIdMap)
-      this.props.setDragDirection(direction)
     }
   }
 
@@ -336,7 +333,6 @@ const mapStateToProps = (state, props) => ({
   yScrollVisible: state.yScrollVisible[props.tableId],
   dragSource: state.dragSource,
   dropTarget: state.dropTarget,
-  dragDirection: state.dragDirection,
   isEditingCell: state.isEditingCell,
 })
 
@@ -345,7 +341,6 @@ const mapDispatchToProps = {
   setYScrollVisible,
   setDragSource,
   setDropTarget,
-  setDragDirection,
   setIsEditingCell,
 }
 

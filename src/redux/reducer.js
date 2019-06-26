@@ -4,8 +4,7 @@ import { SET_X_SCROLL,
          ADD_TABLE,
          DEL_TABLE,
          SET_DRAG_SOURCE,
-         SET_DROP_TARGET,
-         SET_DRAG_DIRECTION } from './action-types'
+         SET_DROP_TARGET } from './action-types'
 
 const initialState = {
   xScroll: {},
@@ -51,11 +50,6 @@ const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         dropTarget: payload
-      }
-    case SET_DRAG_DIRECTION:
-      return {
-        ...state,
-        dragDirection: payload
       }
     default: return state
   }
