@@ -170,21 +170,29 @@ class Body extends PureComponent {
       ? 'up'
       : 'down'
 
+    let srcIdx = this.expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
+    let tgtIdx = this.expandedRows.findIndex(({info}) => info.idMap === idMap)
+    if (direction === 'up') {
+      tgtIdx = tgtIdx === 0 ? undefined : tgtIdx - 1
+    }
+    if (srcIdx === tgtIdx)
+      tgtIdx--
+
     if (this.props.dragSource.tableId === this.props.tableId) {
-      let srcIdx = this.expandedRows.findIndex(({info}) => info.idMap === this.props.dragSource.idMap)
-      let tgtIdx = this.expandedRows.findIndex(({info}) => info.idMap === idMap)
-      if (!isNaN(srcIdx) && !isNaN(tgtIdx) && srcIdx === tgtIdx + (direction === 'up' ? -1 : 1)) {
+      if (!isNaN(srcIdx) && !isNaN(tgtIdx) && srcIdx === tgtIdx + 1) {
         this.props.setDropTarget()
         this.props.setDragDirection()
         return
       }
     }
+ 
+    let tgtIdMap = isNaN(tgtIdx) ? undefined : this.expandedRows[tgtIdx].info.idMap
 
     if (!this.props.dropTarget
-      || this.props.dropTarget.idMap !== idMap
+      || this.props.dropTarget.idMap !== tgtIdMap
       || this.props.dragDirection !== direction
     ) {
-      this.props.setDropTarget(this.props.tableId, idMap)
+      this.props.setDropTarget(this.props.tableId, tgtIdMap)
       this.props.setDragDirection(direction)
     }
   }
@@ -226,18 +234,13 @@ class Body extends PureComponent {
           : 'none'
         switch (dragType) {
           case 'internal-drag':
-            if (tgtIdx > srcIdx && this.props.dragDirection === 'up')
-              tgtIdx--
-            if (tgtIdx < srcIdx && this.props.dragDirection === 'down')
-              tgtIdx++
+
           break
           case 'cross-drag-out':
             tgtIdx = rows.length - 1
           break
           case 'cross-drag-in':
             srcIdx = -1
-            if (this.props.dragDirection === 'up')
-              tgtIdx--
           break
         }
       }
@@ -281,9 +284,9 @@ class Body extends PureComponent {
               let rowStyle = {}
               if (!isNaN(srcIdx)) {
                 let translateY = 0
-                if (index >= srcIdx)
+                if (index > srcIdx)
                   translateY += this.props.rowHeight
-                if (!isNaN(tgtIdx) && _Number.isBetween(index, srcIdx, tgtIdx))
+                if (!isNaN(tgtIdx) && _Number.isBetween(index, srcIdx, tgtIdx, srcIdx < tgtIdx))
                   translateY += (this.props.rowHeight) * (srcIdx > tgtIdx ? 1 : -1)
                 if (translateY !== 0)
                   translateY = Math.abs(translateY) + 1 * Math.sign(translateY)
