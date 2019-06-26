@@ -161,7 +161,7 @@ const App = () => {
   )
 };
 
-const onDrop = (...args) => {
-  console.log(args)
+const onDrop = ({source, target}) => {
+  console.log(source, target)
 }
 render(<App />, document.getElementById("root"));

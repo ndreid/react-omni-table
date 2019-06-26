@@ -13,6 +13,16 @@ class DragDropContext extends Component {
     this.handleMouseLeave = this.handleMouseLeave.bind(this)
   }
 
+  getResult({tableId, idMap}) {
+    let map = idMap.split('|')
+    map.shift() //remove tableId from array
+    return {
+      tableId,
+      id: map.pop(),
+      parentIds: map
+    }
+  }
+
   clearDragState() {
     if (this.props.dragSource) {
       let domNode = document.getElementById(this.props.dragSource.idMap)
@@ -45,14 +55,8 @@ class DragDropContext extends Component {
       && typeof this.props.onDrop === 'function'
     ) {
       this.props.onDrop({
-        source: {
-          tableId: this.props.dragSource.tableId,
-          idMap: this.props.dragSource.idMap,
-        },
-        target: {
-          tableId: this.props.dropTarget.tableId,
-          idMap: this.props.dropTarget.idMap,
-        },
+        source: this.getResult(this.props.dragSource),
+        target: this.getResult(this.props.dropTarget),
       })
     }
     this.clearDragState()
