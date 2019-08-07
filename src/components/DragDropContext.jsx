@@ -14,6 +14,12 @@ class DragDropContext extends Component {
   }
 
   getResult({tableId, idMap}) {
+    if (!idMap)
+      return {
+        tableId,
+        id: undefined,
+        parentIds: undefined,
+      }
     let map = idMap.split('|')
     map.shift() //remove tableId from array
     return {
