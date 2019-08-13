@@ -67,18 +67,23 @@ class Table extends Component {
 
     let emPx = this.cssUnitTranslator.translate('1em', 'px', 0, false)
     for (let col of this.props.columns) {
-      let settingsWidth, contentWidth, titleWidth
+      let settingsWidth, contentWidth, titleWidth, fixedWidth
       if (col.style && col.style.minWidth) {
         settingsWidth = isNaN(col.style.minWidth)
           ? +this.cssUnitTranslator.translate(col.style.minWidth, 'px', 2).replace('px', '')
           : +col.style.minWidth
       }
+      if (col.style && col.style.width) {
+        fixedWidth = isNaN(col.style.width)
+          ? +this.cssUnitTranslator.translate(col.style.width, 'px', 2).replace('px', '')
+          : +col.style.width
+      }
 
       contentWidth = this.state.columnWidths[col.dataIndex]
       titleWidth = Math.ceil(context.measureText(col.name.split(' ').reduce((a, b) => a.length > b.length ? a : b)).width + emPx/*padding*/)
       widths[col.dataIndex] = {
-        actual: Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25),
-        extra: Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25) - Math.max(contentWidth || 0, titleWidth || 0, 25)
+        actual: fixedWidth || Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25),
+        extra: fixedWidth ? Infinity : Math.max(settingsWidth || 0, contentWidth || 0, titleWidth || 0, 25) - Math.max(contentWidth || 0, titleWidth || 0, 25)
       }
     }
 
@@ -91,7 +96,7 @@ class Table extends Component {
 
     let widthsArray = Object.values(widths)
     for (let [_, extraWidth] of Object.entries(widths).sort(([, aWidth], [, bWidth]) => aWidth.extra - bWidth.extra)) {
-      if (extraWidth.extra <= 0)
+      if (extraWidth.extra <= 0 || extraWidth.extra === Infinity)
         continue
       let expandWidths = widthsArray.filter(w => w.extra <= 0)
       let extraWidths = widthsArray.filter(w => w.extra > 0)
@@ -109,7 +114,7 @@ class Table extends Component {
     }
 
     if (remainingWidth > 0) {
-      for (let w of widthsArray) {
+      for (let w of widthsArray.filter(w => w.extra !== Infinity)) {
         w.actual += remainingWidth / widthsArray.length
       }
     }
@@ -184,6 +189,7 @@ class Table extends Component {
 
   render() {
     let columnWidths = this.columnWidths
+    console.log(columnWidths)
     return (
         <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth, maxWidth: this.state.settings.tableWidth, minWidth: this.state.settings.tableWidth }}>
           <Header tableId={this.props.tableId}

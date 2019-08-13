@@ -21,11 +21,11 @@ const columns = [
     name: 'Home Owner', dataIndex: 'homeOwner', dataType: 'bool',
     style: { minWidth: '200px',  align: 'center' },
   },
-  { name: 'Column', dataIndex: 'col5', dataType: 'string', style: { minWidth: '200px' } },
-  { name: 'Column', dataIndex: 'col6', dataType: 'string', style: { minWidth: '200px' } },
-  { name: 'Column', dataIndex: 'col7', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col8', dataType: 'string' },
-  { name: 'Column', dataIndex: 'col9', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col5', dataType: 'string', style: { minWidth: '200px' } },
+  // { name: 'Column', dataIndex: 'col6', dataType: 'string', style: { minWidth: '200px' } },
+  // { name: 'Column', dataIndex: 'col7', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col8', dataType: 'string' },
+  // { name: 'Column', dataIndex: 'col9', dataType: 'string' },
   // { name: 'Column', dataIndex: 'col10', dataType: 'string' },
   // { name: 'Column', dataIndex: 'col11', dataType: 'string' },
   // { name: 'Column', dataIndex: 'col12', dataType: 'string' },
@@ -149,14 +149,14 @@ const App = () => {
 
   return (
     <DragDropArea width='100%' onDrop={onDrop}>
-      <div style={{display: 'flex', height:'100%', width:'100%', maxHeight: '100%', maxWidth: '100%'}}>
-        <div style={{flex: '1 1 auto', minWidth: '0px'}}>
+      {/* <div style={{display: 'flex', height:'100%', width:'100%', maxHeight: '100%', maxWidth: '100%'}}> */}
+        {/* <div style={{flex: '1 1 auto', minWidth: '0px'}}> */}
           <Table tableId='table1' columns={columns} data={data1} rowHeight={25} settings={settings} config={config}/>
-        </div>
-        <div style={{flex: '1 0 auto', minWidth: 0}}>
+        {/* </div> */}
+        {/* <div style={{flex: '1 0 auto', minWidth: 0}}>
           <Table tableId='table2' columns={columns.slice(0,1)} data={data2} rowHeight={25} settings={settings}/>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </DragDropArea>
   )
 };
