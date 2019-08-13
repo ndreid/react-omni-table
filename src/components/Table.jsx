@@ -189,7 +189,6 @@ class Table extends Component {
 
   render() {
     let columnWidths = this.columnWidths
-    console.log(columnWidths)
     return (
         <div ref='table' className='t-table' style={{ width: this.state.settings.tableWidth, maxWidth: this.state.settings.tableWidth, minWidth: this.state.settings.tableWidth }}>
           <Header tableId={this.props.tableId}
