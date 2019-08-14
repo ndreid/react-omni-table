@@ -127,7 +127,7 @@ class Cell extends PureComponent {
                onDoubleClick={this.handleDoubleClick}
           >
             {this.props.children}
-            {this.getFormattedData()}
+            {this.props.data}
           </div>
       )
   }
