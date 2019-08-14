@@ -39,7 +39,7 @@ class Body extends PureComponent {
   get_sortedData = memoize((data, columns, columnSorts) => {
     let sortedData = [...data]
     for (let sortedColumn of columnSorts) {
-      let dataType = columns.find(c => c.dataIndex === sortedColumn.name).dataType
+      let dataType = columns.find(c => c.dataIndex === sortedColumn.name).dataType || DataTypes.String
       sortedData.sort((dataA, dataB) => {
         let aVal = dataA[sortedColumn.name], bVal = dataB[sortedColumn.name]
         let a, b
