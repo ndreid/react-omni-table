@@ -178,6 +178,10 @@ class Body extends PureComponent {
     if (srcIdx === tgtIdx)
       tgtIdx--
 
+    if (tgtIdx < 0) {
+      tgtIdx = undefined
+    }
+
     if (this.props.dragSource.tableId === this.props.tableId) {
       if (!isNaN(srcIdx) && !isNaN(tgtIdx) && srcIdx === tgtIdx + 1) {
         this.props.setDropTarget()
