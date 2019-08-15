@@ -155,8 +155,8 @@ const App = () => {
     }
   }
 
-  let handleContextMenuClick = (id, parentIds, action) => {
-    console.log('handled outside!')
+  let handleContextMenuClick = (data) => {
+    console.log('handled outside!', data)
   }
 
   return (

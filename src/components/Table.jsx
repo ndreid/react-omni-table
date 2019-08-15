@@ -167,10 +167,6 @@ class Table extends Component {
     this.forceUpdate()
   }
 
-  handleContextMenuClick(e, data) {
-    console.log(data)
-  }
-
   componentDidMount() {
     this.props.addTable(this.props.tableId)
     this.setState({ mounted: true })
@@ -213,7 +209,7 @@ class Table extends Component {
                 config={this.state.config}
                 columnSorts={this.state.columnSorts}
                 columnWidths={columnWidths}
-                onContextMenuClick={this.handleContextMenuClick}
+                onContextMenuClick={this.props.onContextMenuClick}
           />
           <ResizeDetector handleWidth onResize={this.handleResize} />
         </div>

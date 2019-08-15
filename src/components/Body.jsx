@@ -17,6 +17,7 @@ class Body extends PureComponent {
     this.handleShowHideToggle = this.handleShowHideToggle.bind(this)
     this.handleDragStart = this.handleDragStart.bind(this)
     this.handleMouseRowEnter = this.handleMouseRowEnter.bind(this)
+    this.handleContextMenuClick = this.handleContextMenuClick.bind(this)
 
     this.state = {
       windowRange: {
@@ -285,10 +286,10 @@ class Body extends PureComponent {
       isEditingCell: this.props.isEditingCell,
       setIsEditingCell: this.props.setIsEditingCell,
       onCellInput: this.props.onCellInput,
-      onContextMenuClick: this.props.onContextMenuClick,
       handleShowHideToggle: this.handleShowHideToggle,
       onDragStart: this.handleDragStart,
       onMouseEnter: this.handleMouseRowEnter,
+      onContextMenuClick: this.handleContextMenuClick,
     }
 
     return (
