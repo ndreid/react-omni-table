@@ -4,6 +4,7 @@ import memoize from 'memoize-one'
 import Cell from './Cell'
 import { PlusSVG, MinusSVG } from './SVG'
 import gripImg from '../img_grip.png'
+import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu'
 
 const defaultSettings = {
   draggable: true,
@@ -47,7 +48,6 @@ class Row extends Component {
         ...inputObj
       })
     }
-
   }
 
   onDragStart(e) {
@@ -80,36 +80,51 @@ class Row extends Component {
     }
     
     return (
-      <div ref='self' id={this.props.idMap} className={'t-row'} style={style} onMouseEnter={this.onMouseEnter}>
+      <React.Fragment>
+        <ContextMenuTrigger id={this.props.idMap}>    
+          <div ref='self' id={this.props.idMap} className={'t-row'} style={style} onMouseEnter={this.onMouseEnter}>
+            {
+              this.props.settings.dragEnabled && this.rowSettings.draggable
+                ? <img className={'t-drag-gutter' + dragClass} src={gripImg} draggable onDragStart={this.onDragStart}/>
+                : <div className='t-drag-gutter-space'/>
+            }
+            {this.props.columns.map((col, idx) => {
+              let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined
+              return <Cell key={idx}
+                          primary={idx === 0}
+                          tier={this.props.tier}
+                          data={this.props.data[col.dataIndex]}
+                          column={col}
+                          columnWidth={this.props.columnWidths[col.dataIndex]}
+                          overrideProps={cellOverrideProps}
+                          onCellInput={this.onCellInput}
+                          setIsEditingCell={this.props.setIsEditingCell}
+                      >
+                        {idx === 0
+                          ? this.props.data.children
+                            ? this.state.hideChildren || this.props.isDragging
+                              ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={'1em'} height={'1em'} stroke={style.color}/></div>
+                              : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={'1em'} height={'1em'} stroke={style.color}/></div>
+                            : <div className={'t-cell t-expand-space'}/>
+                          : undefined
+                        }
+                      </Cell>
+            }
+            )}
+          </div>
+        </ContextMenuTrigger>
         {
-          this.props.settings.dragEnabled && this.rowSettings.draggable
-            ? <img className={'t-drag-gutter' + dragClass} src={gripImg} draggable onDragStart={this.onDragStart}/>
-            : <div className='t-drag-gutter-space'/>
+          this.props.settings.tierContextMenuOptions.length >= this.props.tier && this.props.settings.tierContextMenuOptions[this.props.tier]
+            ? <ContextMenu id={this.props.idMap}>
+                {this.props.settings.tierContextMenuOptions[this.props.tier].map(o => 
+                  <MenuItem key={this.props.idMap + o} data={{idMap: this.props.idMap, action: o}} onClick={this.props.onContextMenuClick}>
+                    {o}
+                  </MenuItem>
+                )}
+              </ContextMenu>
+            : undefined
         }
-        {this.props.columns.map((col, idx) => {
-          let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined
-          return <Cell key={idx}
-                      primary={idx === 0}
-                      tier={this.props.tier}
-                      data={this.props.data[col.dataIndex]}
-                      column={col}
-                      columnWidth={this.props.columnWidths[col.dataIndex]}
-                      overrideProps={cellOverrideProps}
-                      onCellInput={this.onCellInput}
-                      setIsEditingCell={this.props.setIsEditingCell}
-                  >
-                    {idx === 0
-                      ? this.props.data.children
-                        ? this.state.hideChildren || this.props.isDragging
-                          ? <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><PlusSVG width={'1em'} height={'1em'} stroke={style.color}/></div>
-                          : <div className={'t-expand-button t-cell'} onClick={this.showHideToggle}><MinusSVG width={'1em'} height={'1em'} stroke={style.color}/></div>
-                        : <div className={'t-cell t-expand-space'}/>
-                      : undefined
-                    }
-                  </Cell>
-        }
-        )}
-      </div>
+      </React.Fragment>
     )
   }
 }
@@ -125,6 +140,7 @@ Row.propTypes = {
   isEditingCell: PropTypes.bool.isRequired,
   isDragging: PropTypes.bool.isRequired,
   onCellInput: PropTypes.func,
+  onContextMenuClick: PropTypes.func,
   settings: PropTypes.object.isRequired,
   handleHideChildren: PropTypes.func,
   onDragStart: PropTypes.func.isRequired,

@@ -28,6 +28,7 @@ class Table extends Component {
       dragEnabled: false,
       fontFamily: fontFamily.replace(new RegExp('"', 'g'), ''),
       fontSize,
+      tierContextMenuOptions: [],
     }
 
     this.defaultConfig = {
@@ -166,6 +167,10 @@ class Table extends Component {
     this.forceUpdate()
   }
 
+  handleContextMenuClick(e, data) {
+    console.log(data)
+  }
+
   componentDidMount() {
     this.props.addTable(this.props.tableId)
     this.setState({ mounted: true })
@@ -208,6 +213,7 @@ class Table extends Component {
                 config={this.state.config}
                 columnSorts={this.state.columnSorts}
                 columnWidths={columnWidths}
+                onContextMenuClick={this.handleContextMenuClick}
           />
           <ResizeDetector handleWidth onResize={this.handleResize} />
         </div>
@@ -226,6 +232,7 @@ Table.propTypes = {
     PropTypes.number,
   ]).isRequired,
   rowHeight: PropTypes.number.isRequired,
+  onContextMenuClick: PropTypes.func,
 }
 
 Table.defaultProps = {

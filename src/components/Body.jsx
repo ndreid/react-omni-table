@@ -198,6 +198,19 @@ class Body extends PureComponent {
     }
   }
 
+  handleContextMenuClick(e, { idMap, action }) {
+    if (typeof this.props.onContextMenuClick !== 'function')
+      return
+    let map = idMap.split('|')
+    map.shift() //remove tableId from array
+    this.props.onContextMenuClick({
+      tableId: this.props.tableId,
+      id: map.pop(),
+      parentIds: map,
+      action
+    })
+  }
+
   componentDidMount() {
     let _this = this
     setTimeout(() => {
@@ -272,12 +285,13 @@ class Body extends PureComponent {
       isEditingCell: this.props.isEditingCell,
       setIsEditingCell: this.props.setIsEditingCell,
       onCellInput: this.props.onCellInput,
+      onContextMenuClick: this.props.onContextMenuClick,
       handleShowHideToggle: this.handleShowHideToggle,
       onDragStart: this.handleDragStart,
       onMouseEnter: this.handleMouseRowEnter,
     }
 
-    return (             
+    return (
       <div ref={this.self} className={classes} onScroll={this.handleScroll} style={style}>
           <div key={-1} className='t-body-buffer' style={{minHeight: windowParams.scrollBuffer.top}}/>
           {rows.length > 0
@@ -324,6 +338,7 @@ Body.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   onCellInput: PropTypes.func,
+  onContextMenuClick: PropTypes.func,
   rowHeight: PropTypes.number.isRequired,
   settings: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
