@@ -79,6 +79,8 @@ class Row extends Component {
       ...this.props.style
     }
     
+    let contextMenuOptions = this.rowSettings.contextMenuOptions || (this.props.settings.tierContextMenuOptions.length >= this.props.tier ? this.props.settings.tierContextMenuOptions[this.props.tier] : undefined)
+    
     return (
       <React.Fragment>
         <ContextMenuTrigger id={this.props.idMap}>    
@@ -114,9 +116,9 @@ class Row extends Component {
           </div>
         </ContextMenuTrigger>
         {
-          this.props.settings.tierContextMenuOptions.length >= this.props.tier && this.props.settings.tierContextMenuOptions[this.props.tier]
+          contextMenuOptions
             ? <ContextMenu id={this.props.idMap}>
-                {this.props.settings.tierContextMenuOptions[this.props.tier].map(o => 
+                {contextMenuOptions.map(o => 
                   <MenuItem key={this.props.idMap + o} data={{idMap: this.props.idMap, action: o}} onClick={this.props.onContextMenuClick}>
                     {o}
                   </MenuItem>

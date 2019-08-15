@@ -1,6 +1,6 @@
 {
   "name": "react-omni-table",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "description": "React Table Components",
   "main": "dist/index.js",
   "scripts": {

@@ -60,6 +60,9 @@ const App = () => {
   let tableData = []
   for (let i = 1; i < 100; i++) {
     tableData.push({
+      settings: {
+        contextMenuOptions: [1, i+1, i+2]
+      },
       id: i,
       name: 'My Name' + i,
       birthday: '1/1/2019',
