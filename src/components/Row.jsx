@@ -79,8 +79,6 @@ class Row extends Component {
       ...this.props.style
     }
     
-    let contextMenuOptions = this.rowSettings.contextMenuOptions || (this.props.settings.tierContextMenuOptions.length >= this.props.tier ? this.props.settings.tierContextMenuOptions[this.props.tier] : undefined)
-    
     return (
       <React.Fragment>
         <ContextMenuTrigger id={this.props.idMap}>    
@@ -93,14 +91,14 @@ class Row extends Component {
             {this.props.columns.map((col, idx) => {
               let cellOverrideProps = Array.isArray(this.props.data.cellOverrideProps) ? this.props.data.cellOverrideProps.find(props => props.dataIndex === col.dataIndex) : undefined
               return <Cell key={idx}
-                          primary={idx === 0}
-                          tier={this.props.tier}
-                          data={this.props.data[col.dataIndex]}
-                          column={col}
-                          columnWidth={this.props.columnWidths[col.dataIndex]}
-                          overrideProps={cellOverrideProps}
-                          onCellInput={this.onCellInput}
-                          setIsEditingCell={this.props.setIsEditingCell}
+                        primary={idx === 0}
+                        tier={this.props.tier}
+                        data={this.props.data[col.dataIndex]}
+                        column={col}
+                        columnWidth={this.props.columnWidths[col.dataIndex]}
+                        overrideProps={cellOverrideProps}
+                        onCellInput={this.onCellInput}
+                        setIsEditingCell={this.props.setIsEditingCell}
                       >
                         {idx === 0
                           ? this.props.data.children
@@ -116,10 +114,14 @@ class Row extends Component {
           </div>
         </ContextMenuTrigger>
         {
-          contextMenuOptions
+          this.rowSettings.contextMenuOptions
             ? <ContextMenu id={this.props.idMap}>
-                {contextMenuOptions.map(o => 
-                  <MenuItem key={this.props.idMap + o} data={{idMap: this.props.idMap, action: o}} onClick={this.props.onContextMenuClick}>
+                {this.rowSettings.contextMenuOptions.map(o => 
+                  <MenuItem key={this.props.idMap + o}
+                    data={{idMap: this.props.idMap, action: o}}
+                    disabled={this.rowSettings.disabledContextMenuOptions && this.rowSettings.disabledContextMenuOptions.includes(o)}
+                    onClick={this.props.onContextMenuClick}
+                  >
                     {o}
                   </MenuItem>
                 )}

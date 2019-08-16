@@ -47,11 +47,6 @@ const settings = {
     { color: 'black', backgroundColor: 'lightgreen' },
     { color: 'black', backgroundColor: 'white' },
   ],
-  tierContextMenuOptions: [
-    ['Option1', 'Option2'],
-    undefined,
-    ['Option3', 'Option4']
-  ]
   // headerColors: { color: 'white', backgroundColor: 'darkblue' , borderColor: 'black' }
 }
 
@@ -61,7 +56,8 @@ const App = () => {
   for (let i = 1; i < 100; i++) {
     tableData.push({
       settings: {
-        contextMenuOptions: [1, i+1, i+2]
+        contextMenuOptions: [1, i+1, i+2],
+        disabledContextMenuOptions: [1],
       },
       id: i,
       name: 'My Name' + i,
@@ -143,18 +139,6 @@ const App = () => {
   let data1 = tableData.slice(0, 98)
   let data2 = tableData.slice(98)
 
-
-  let config = {
-    tierDropTargets: {
-      0: {
-        'table2': [0]
-      },
-      1: {
-        'table2': [1]
-      }
-    }
-  }
-
   let handleContextMenuClick = (data) => {
     console.log('handled outside!', data)
   }
@@ -163,7 +147,7 @@ const App = () => {
     <DragDropArea width='100%' onDrop={onDrop}>
       {/* <div style={{display: 'flex', height:'100%', width:'100%', maxHeight: '100%', maxWidth: '100%'}}> */}
         {/* <div style={{flex: '1 1 auto', minWidth: '0px'}}> */}
-          <Table tableId='table1' columns={columns} data={data1} rowHeight={25} settings={settings} config={config} onContextMenuClick={handleContextMenuClick}/>
+          <Table tableId='table1' columns={columns} data={data1} rowHeight={25} settings={settings} onContextMenuClick={handleContextMenuClick}/>
         {/* </div> */}
         {/* <div style={{flex: '1 0 auto', minWidth: 0}}>
           <Table tableId='table2' columns={columns.slice(0,1)} data={data2} rowHeight={25} settings={settings}/>

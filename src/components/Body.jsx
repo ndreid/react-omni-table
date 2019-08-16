@@ -342,7 +342,6 @@ Body.propTypes = {
   onContextMenuClick: PropTypes.func,
   rowHeight: PropTypes.number.isRequired,
   settings: PropTypes.object.isRequired,
-  config: PropTypes.object.isRequired,
   columnSorts: PropTypes.array.isRequired,
   columnWidths: PropTypes.object.isRequired,
 }
